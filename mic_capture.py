@@ -40,6 +40,10 @@ class MicCapture:
 
         audio_chunk = indata[:, 0].copy().astype(np.float32)
 
+        # Apply gain boost for better sensitivity at normal speaking distance
+        if config.MIC_GAIN != 1.0:
+            audio_chunk = np.clip(audio_chunk * config.MIC_GAIN, -1.0, 1.0)
+
         # Schedule queue put in the async loop — check full first to avoid
         # asyncio logging QueueFull exceptions
         def _safe_put(chunk=audio_chunk):

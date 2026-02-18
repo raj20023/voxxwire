@@ -2,7 +2,10 @@
 Audio processing channel pipeline.
 
 Each channel (mic, loopback) has its own pipeline:
-  Audio Queue -> VAD -> ASR -> Translation -> Subtitles + TTS
+  Audio Queue -> VAD -> Utterance Queue -> ASR -> Translation -> Subtitles + TTS
+
+VAD runs continuously in its own task so audio is NEVER dropped during
+ASR/translation. The utterance queue decouples the two stages.
 
 Runs as an async task, consuming audio chunks from the capture queue.
 """
@@ -34,8 +37,11 @@ class ChannelPipeline:
     """
     Processing pipeline for one audio channel.
 
-    Consumes audio chunks from a queue, runs VAD, ASR, translation,
-    and outputs subtitles + TTS audio.
+    Two decoupled async tasks:
+    1. VAD task: continuously reads audio chunks -> emits complete utterances
+    2. ASR task: picks up utterances -> ASR -> translate -> output
+
+    This ensures audio is NEVER dropped while ASR/translation is running.
     """
 
     def __init__(
@@ -60,28 +66,17 @@ class ChannelPipeline:
         self.subtitles = subtitles
         self.audio_player = audio_player
         self._running = False
+        # Internal queue between VAD task and ASR task (max 10 utterances buffered)
+        self._utterance_queue: asyncio.Queue = asyncio.Queue(maxsize=10)
 
-    async def run(self):
+    async def _vad_task(self, channel_vad: SileroVAD):
         """
-        Main pipeline loop. Runs until stopped.
-
-        Flow: audio chunks -> VAD -> ASR -> translate -> output
+        Continuously reads raw audio chunks and runs VAD.
+        Emits complete utterances into _utterance_queue.
+        This runs independently of ASR so audio is never dropped.
         """
-        self._running = True
-        logger.info(
-            f"Pipeline [{self.name}] started: "
-            f"{self.source_lang} -> {self.target_lang}"
-        )
-
-        # Each channel gets its own VAD instance (they track state independently)
-        channel_vad = SileroVAD()
-        channel_vad.load()
-
-        loop = asyncio.get_event_loop()
-
         while self._running:
             try:
-                # Get audio chunk from capture (with timeout to allow shutdown)
                 try:
                     audio_chunk = await asyncio.wait_for(
                         self.audio_queue.get(), timeout=1.0
@@ -89,13 +84,44 @@ class ChannelPipeline:
                 except asyncio.TimeoutError:
                     continue
 
-                # Run VAD (fast, runs inline)
                 utterance = channel_vad.process_chunk(audio_chunk)
 
-                if utterance is None:
+                if utterance is not None:
+                    logger.debug(
+                        f"[{self.name}] VAD: utterance ready "
+                        f"{len(utterance)/config.SAMPLE_RATE:.2f}s"
+                    )
+                    # Drop oldest if queue is full (ASR is too slow)
+                    if self._utterance_queue.full():
+                        try:
+                            self._utterance_queue.get_nowait()
+                            logger.warning(
+                                f"[{self.name}] Utterance queue full, dropped oldest"
+                            )
+                        except asyncio.QueueEmpty:
+                            pass
+                    await self._utterance_queue.put(utterance)
+
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"VAD task [{self.name}] error: {e}", exc_info=True)
+                await asyncio.sleep(0.05)
+
+    async def _asr_task(self, loop: asyncio.AbstractEventLoop):
+        """
+        Picks up complete utterances and runs ASR -> translation -> output.
+        Runs independently so VAD keeps collecting audio while this processes.
+        """
+        while self._running:
+            try:
+                try:
+                    utterance = await asyncio.wait_for(
+                        self._utterance_queue.get(), timeout=1.0
+                    )
+                except asyncio.TimeoutError:
                     continue
 
-                # We have a complete utterance — process it
                 logger.debug(
                     f"[{self.name}] Processing utterance: "
                     f"{len(utterance)/config.SAMPLE_RATE:.2f}s"
@@ -147,8 +173,34 @@ class ChannelPipeline:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Pipeline [{self.name}] error: {e}", exc_info=True)
+                logger.error(f"ASR task [{self.name}] error: {e}", exc_info=True)
                 await asyncio.sleep(0.1)
+
+    async def run(self):
+        """
+        Main pipeline: starts VAD and ASR as two concurrent tasks.
+        VAD continuously collects audio; ASR processes utterances independently.
+        """
+        self._running = True
+        logger.info(
+            f"Pipeline [{self.name}] started: "
+            f"{self.source_lang} -> {self.target_lang}"
+        )
+
+        # Each channel gets its own VAD instance (they track state independently)
+        channel_vad = SileroVAD()
+        channel_vad.load()
+
+        loop = asyncio.get_event_loop()
+
+        # Run both tasks concurrently — VAD never blocks on ASR
+        vad_coro = self._vad_task(channel_vad)
+        asr_coro = self._asr_task(loop)
+
+        try:
+            await asyncio.gather(vad_coro, asr_coro)
+        except asyncio.CancelledError:
+            pass
 
         logger.info(f"Pipeline [{self.name}] stopped")
 

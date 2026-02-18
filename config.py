@@ -30,6 +30,10 @@ SAMPLE_RATE: int = 16000
 # Smaller = lower latency but more CPU. 30ms is good for VAD.
 CHUNK_DURATION_MS: int = 30
 
+# Microphone input gain multiplier (1.0 = no boost, 2.0 = double amplitude)
+# Increase if voice is not being detected at normal speaking distance
+MIC_GAIN: float = 2.5
+
 # =============================================================================
 # LANGUAGE SETTINGS
 # =============================================================================
@@ -71,7 +75,7 @@ WHISPER_COMPUTE_TYPE: str = "auto"
 
 # Minimum audio duration (seconds) to send to ASR
 # Prevents sending tiny fragments
-MIN_SPEECH_DURATION_S: float = 0.5
+MIN_SPEECH_DURATION_S: float = 0.3  # Lowered to catch shorter phrases
 
 # Maximum audio buffer before forcing ASR (seconds)
 # Prevents accumulating too much audio in RAM
@@ -83,10 +87,10 @@ MAX_SPEECH_DURATION_S: float = 15.0
 
 # Speech probability threshold (0.0 - 1.0)
 # Higher = more conservative (fewer false triggers)
-VAD_THRESHOLD: float = 0.4
+VAD_THRESHOLD: float = 0.2  # Lower = more sensitive (good for normal speaking distance)
 
 # Minimum silence duration (ms) to consider speech ended
-VAD_MIN_SILENCE_MS: int = 600
+VAD_MIN_SILENCE_MS: int = 500  # Reduced for snappier response
 
 # Speech padding (ms) — audio kept before/after detected speech
 VAD_SPEECH_PAD_MS: int = 100

@@ -1,76 +1,116 @@
-10:09:59 [whisper_asr         ] INFO    Loading Whisper model: size=small, device=cpu, compute_type=int8
-10:10:00 [httpx               ] INFO    HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
-10:10:02 [whisper_asr         ] INFO    Whisper model loaded successfully
-10:10:02 [vad_engine          ] INFO    Loading Silero VAD model...
-10:10:02 [vad_engine          ] ERROR   Failed to load Silero VAD: No module named 'torchaudio'
-10:10:02 [vad_engine          ] INFO    Falling back to simple energy-based VAD
-10:10:03 [mic_capture         ] INFO    Starting mic capture: device=1, sr=16000, blocksize=480
-10:10:04 [mic_capture         ] INFO    Mic capture started successfully
-10:10:04 [loopback_capture    ] INFO    Starting loopback capture (input device mode): device=[28] Microphone Array 2 (AMDAfdInstall Wave Microphone - 1), sr=16000, ch=1
-10:10:04 [loopback_capture    ] INFO    Loopback capture started via input device (sr: 16000)
-10:10:04 [channel             ] INFO    Pipeline [mic] started: en -> ja
-10:10:04 [vad_engine          ] INFO    Loading Silero VAD model...
-10:10:04 [vad_engine          ] ERROR   Failed to load Silero VAD: No module named 'torchaudio'
-10:10:04 [vad_engine          ] INFO    Falling back to simple energy-based VAD
-10:10:04 [channel             ] INFO    Pipeline [loopback] started: ja -> en
-10:10:04 [vad_engine          ] INFO    Loading Silero VAD model...
-10:10:04 [vad_engine          ] ERROR   Failed to load Silero VAD: No module named 'torchaudio'
-10:10:04 [vad_engine          ] INFO    Falling back to simple energy-based VAD
-10:10:08 [faster_whisper      ] INFO    Processing audio with duration 00:01.024
-10:10:14 [argostranslate.utils] INFO    ('get_installed_languages',)
-10:10:14 [argostranslate.utils] INFO    ('paragraphs:', ['Hello.'])
-10:10:14 [argostranslate.utils] INFO    ('apply_packaged_translation', 'Hello.')
-10:10:14 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
-10:10:15 [stanza              ] WARNING Language en package default expects mwt, which has been added
-10:10:17 [argostranslate.utils] INFO    ('sentences', ['Hello.'])
-10:10:17 [argostranslate.utils] INFO    ('tokenized', [['▁Hello', '.']])
-10:10:17 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁お問い合わせ']], scores=[-2.211487293243408], attention=[], logits=[])])
-10:10:17 [argostranslate.utils] INFO    ('value_hypotheses:', [('お問い合わせ', -2.211487293243408)])
-10:10:17 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('お問い合わせ', -2.211487293243408)]])
-10:10:17 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('お問い合わせ', -2.211487293243408)])
-10:10:27 [faster_whisper      ] INFO    Processing audio with duration 00:00.800
-10:10:30 [argostranslate.utils] INFO    ('paragraphs:', ['Thank you.'])
-10:10:30 [argostranslate.utils] INFO    ('apply_packaged_translation', 'Thank you.')
-10:10:30 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
-10:10:30 [argostranslate.utils] INFO    ('sentences', ['Thank you.'])
-10:10:30 [argostranslate.utils] INFO    ('tokenized', [['▁Thank', '▁you', '.']])
-10:10:30 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', 'ありがとうございます', '。']], scores=[-2.1766929626464844], attention=[], logits=[])])
-10:10:30 [argostranslate.utils] INFO    ('value_hypotheses:', [('ありがとうございます。', -2.1766929626464844)])
-10:10:30 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('ありがとうございます。', -2.1766929626464844)]])
-10:10:30 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('ありがとうございます。', -2.1766929626464844)])
-10:10:44 [faster_whisper      ] INFO    Processing audio with duration 00:00.704
-10:10:46 [argostranslate.utils] INFO    ('paragraphs:', ['Good.'])
-10:10:46 [argostranslate.utils] INFO    ('apply_packaged_translation', 'Good.')
-10:10:46 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
-10:10:46 [argostranslate.utils] INFO    ('sentences', ['Good.'])
-10:10:46 [argostranslate.utils] INFO    ('tokenized', [['▁Good', '.']])
-10:10:46 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁お問い合わせ']], scores=[-2.5215320587158203], attention=[], logits=[])])
-10:10:46 [argostranslate.utils] INFO    ('value_hypotheses:', [('お問い合わせ', -2.5215320587158203)])
-10:10:46 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('お問い合わせ', -2.5215320587158203)]])
-10:10:46 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('お問い合わせ', -2.5215320587158203)])
-10:10:51 [faster_whisper      ] INFO    Processing audio with duration 00:01.856
-10:10:53 [argostranslate.utils] INFO    ('paragraphs:', ['setting up audio devices engine.'])
-10:10:53 [argostranslate.utils] INFO    ('apply_packaged_translation', 'setting up audio devices engine.')
-10:10:53 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
-10:10:53 [argostranslate.utils] INFO    ('sentences', ['setting up audio devices engine.'])
-10:10:53 [argostranslate.utils] INFO    ('tokenized', [['▁setting', '▁up', '▁audio', '▁devices', '▁engine', '.']])
-10:10:53 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', 'オーディオ', '機器', 'エンジン', 'の設定']], scores=[-2.06569504737854], attention=[], logits=[])])
-10:10:53 [argostranslate.utils] INFO    ('value_hypotheses:', [('オーディオ機器エンジンの設定', -2.06569504737854)])
-10:10:53 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('オーディオ機器エンジンの設定', -2.06569504737854)]])
-10:10:53 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('オーディオ機器エンジンの設定', -2.06569504737854)])
-10:10:54 [faster_whisper      ] INFO    Processing audio with duration 00:01.248
-10:10:55 [argostranslate.utils] INFO    ('paragraphs:', ['to translate.'])
-10:10:55 [argostranslate.utils] INFO    ('apply_packaged_translation', 'to translate.')
-10:10:55 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
-10:10:55 [argostranslate.utils] INFO    ('sentences', ['to translate.'])
-10:10:55 [argostranslate.utils] INFO    ('tokenized', [['▁to', '▁trans', 'late', '.']])
-10:10:55 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', '翻訳', 'する', '。']], scores=[-1.879129409790039], attention=[], logits=[])])
-10:10:55 [argostranslate.utils] INFO    ('value_hypotheses:', [('翻訳する。', -1.879129409790039)])
-10:10:55 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('翻訳する。', -1.879129409790039)]])
-10:10:55 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('翻訳する。', -1.879129409790039)])
-10:11:14 [mic_capture         ] INFO    Mic capture stopped
-10:11:14 [loopback_capture    ] INFO    Loopback capture stopped
-10:11:45 [asyncio             ] ERROR   Task was destroyed but it is pending!
-task: <Task cancelling name='Task-1' coro=<ChannelPipeline.run() running at C:\Users\rajp2\Desktop\projects\voxbridge\channel.py:86> wait_for=<Future cancelled>>
-10:11:45 [asyncio             ] ERROR   Task was destroyed but it is pending!
-task: <Task cancelling name='Task-2' coro=<ChannelPipeline.run() running at C:\Users\rajp2\Desktop\projects\voxbridge\channel.py:86> wait_for=<Future cancelled>>
+18:26:09 [whisper_asr         ] INFO    Loading Whisper model: size=small, device=cpu, compute_type=int8
+18:26:11 [httpx               ] INFO    HTTP Request: GET https://huggingface.co/api/models/Systran/faster-whisper-small/revision/main "HTTP/1.1 200 OK"
+18:26:13 [whisper_asr         ] INFO    Whisper model loaded successfully
+18:26:13 [vad_engine          ] INFO    Loading Silero VAD model...
+18:26:13 [vad_engine          ] ERROR   Failed to load Silero VAD: No module named 'torchaudio'
+18:26:13 [vad_engine          ] INFO    Falling back to simple energy-based VAD
+18:26:13 [mic_capture         ] INFO    Starting mic capture: device=1, sr=16000, blocksize=480
+18:26:14 [mic_capture         ] INFO    Mic capture started successfully
+18:26:14 [loopback_capture    ] INFO    Starting loopback capture (input device mode): device=[28] Input (@System32\drivers\bthhfenum.sys,#4;%1 Hands-Free HF Audio%0
+;(vivo V30)), sr=8000, ch=1
+18:26:14 [channel             ] INFO    Pipeline [mic] started: en -> ja
+18:26:14 [vad_engine          ] INFO    Loading Silero VAD model...
+18:26:14 [vad_engine          ] ERROR   Failed to load Silero VAD: No module named 'torchaudio'
+18:26:14 [vad_engine          ] INFO    Falling back to simple energy-based VAD
+18:26:14 [channel             ] INFO    Pipeline [loopback] started: ja -> en
+18:26:14 [vad_engine          ] INFO    Loading Silero VAD model...
+18:26:14 [vad_engine          ] ERROR   Failed to load Silero VAD: No module named 'torchaudio'
+18:26:14 [vad_engine          ] INFO    Falling back to simple energy-based VAD
+18:26:20 [faster_whisper      ] INFO    Processing audio with duration 00:03.616
+18:26:25 [argostranslate.utils] INFO    ('get_installed_languages',)
+18:26:25 [argostranslate.utils] INFO    ('paragraphs:', ["Hey, how's this wondering how I was doing?"])
+18:26:25 [argostranslate.utils] INFO    ('apply_packaged_translation', "Hey, how's this wondering how I was doing?")
+18:26:25 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:27 [stanza              ] WARNING Language en package default expects mwt, which has been added
+18:26:29 [argostranslate.utils] INFO    ('sentences', ["Hey, how's this wondering how I was doing?"])
+18:26:29 [argostranslate.utils] INFO    ('tokenized', [['▁Hey', ',', '▁how', "'", 's', '▁this', '▁wonder', 'ing', '▁how', '▁I', '▁was', '▁doing', '?']])
+18:26:29 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', 'や', '、', 'どのように', 'して', 'や', 'っていた', 'の', 'だろうか', '?']], scores=[-9.2980375289917], attention=[], logits=[])])
+18:26:29 [argostranslate.utils] INFO    ('value_hypotheses:', [('や、どのようにしてやっていたのだろうか?', -9.2980375289917)])
+18:26:29 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('や、どのようにしてやっていたのだろうか?', -9.2980375289917)]])
+18:26:29 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('や、どのようにしてやっていたのだろうか?', -9.2980375289917)])
+18:26:29 [faster_whisper      ] INFO    Processing audio with duration 00:06.944
+18:26:32 [argostranslate.utils] INFO    ('paragraphs:', ["and it's quite a time when we catch up in the past few weeks but"])
+18:26:32 [argostranslate.utils] INFO    ('apply_packaged_translation', "and it's quite a time when we catch up in the past few weeks but")
+18:26:32 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:32 [argostranslate.utils] INFO    ('sentences', ["and it's quite a time when we catch up in the past few weeks but"])
+18:26:32 [argostranslate.utils] INFO    ('tokenized', [['▁and', '▁it', "'", 's', '▁quite', '▁a', '▁time', '▁when', '▁we', '▁catch', '▁up', '▁in', '▁the', '▁past', '▁few', '▁weeks', '▁but']])
+18:26:32 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', '過去', '数', '週間', 'に', '追い', 'つく', 'と', 'かなり', 'の時間', 'です', 'が', '、']], scores=[-7.3752851486206055], attention=[], logits=[])])
+18:26:32 [argostranslate.utils] INFO    ('value_hypotheses:', [('過去数週間に追いつくとかなりの時間ですが、', -7.3752851486206055)])
+18:26:32 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('過去数週間に追いつくとかなりの時間ですが、', -7.3752851486206055)]])
+18:26:32 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('過去数週間に追いつくとかなりの時間ですが、', -7.3752851486206055)])
+18:26:32 [faster_whisper      ] INFO    Processing audio with duration 00:01.728
+18:26:34 [argostranslate.utils] INFO    ('paragraphs:', ['as we should catch up.'])
+18:26:34 [argostranslate.utils] INFO    ('apply_packaged_translation', 'as we should catch up.')
+18:26:34 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:34 [argostranslate.utils] INFO    ('sentences', ['as we should catch up.'])
+18:26:34 [argostranslate.utils] INFO    ('tokenized', [['▁as', '▁we', '▁should', '▁catch', '▁up', '.']])
+18:26:34 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', 'キャッチ', 'アップ', 'する', '。']], scores=[-4.522523403167725], attention=[], logits=[])])
+18:26:34 [argostranslate.utils] INFO    ('value_hypotheses:', [('キャッチアップする。', -4.522523403167725)])
+18:26:34 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('キャッチアップする。', -4.522523403167725)]])
+18:26:34 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('キャッチアップする。', -4.522523403167725)])
+18:26:34 [faster_whisper      ] INFO    Processing audio with duration 00:00.576
+18:26:36 [argostranslate.utils] INFO    ('paragraphs:', ['you'])
+18:26:36 [argostranslate.utils] INFO    ('apply_packaged_translation', 'you')
+18:26:36 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:36 [argostranslate.utils] INFO    ('sentences', ['you'])
+18:26:36 [argostranslate.utils] INFO    ('tokenized', [['▁you']])
+18:26:36 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁お問い合わせ']], scores=[-2.5664801597595215], attention=[], logits=[])])
+18:26:36 [argostranslate.utils] INFO    ('value_hypotheses:', [('お問い合わせ', -2.5664801597595215)])
+18:26:36 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('お問い合わせ', -2.5664801597595215)]])
+18:26:36 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('お問い合わせ', -2.5664801597595215)])
+18:26:39 [faster_whisper      ] INFO    Processing audio with duration 00:01.344
+18:26:42 [argostranslate.utils] INFO    ('paragraphs:', ["That's great."])
+18:26:42 [argostranslate.utils] INFO    ('apply_packaged_translation', "That's great.")
+18:26:42 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:42 [argostranslate.utils] INFO    ('sentences', ["That's great."])
+18:26:42 [argostranslate.utils] INFO    ('tokenized', [['▁That', "'", 's', '▁great', '.']])
+18:26:42 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁それは', '素晴らしい', 'です', '。']], scores=[-2.9634249210357666], attention=[], logits=[])])
+18:26:42 [argostranslate.utils] INFO    ('value_hypotheses:', [('それは素晴らしいです。', -2.9634249210357666)])
+18:26:42 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('それは素晴らしいです。', -2.9634249210357666)]])
+18:26:42 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('それは素晴らしいです。', -2.9634249210357666)])
+18:26:42 [faster_whisper      ] INFO    Processing audio with duration 00:01.184
+18:26:43 [argostranslate.utils] INFO    ('paragraphs:', ['I think...'])
+18:26:43 [argostranslate.utils] INFO    ('apply_packaged_translation', 'I think...')
+18:26:43 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:44 [argostranslate.utils] INFO    ('sentences', ['I think...'])
+18:26:44 [argostranslate.utils] INFO    ('tokenized', [['▁I', '▁think', '...']])
+18:26:44 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁お問い合わせ']], scores=[-3.311788558959961], attention=[], logits=[])])
+18:26:44 [argostranslate.utils] INFO    ('value_hypotheses:', [('お問い合わせ', -3.311788558959961)])
+18:26:44 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('お問い合わせ', -3.311788558959961)]])
+18:26:44 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('お問い合わせ', -3.311788558959961)])
+18:26:44 [faster_whisper      ] INFO    Processing audio with duration 00:01.792
+18:26:46 [argostranslate.utils] INFO    ('paragraphs:', ['I can do something about it.'])
+18:26:46 [argostranslate.utils] INFO    ('apply_packaged_translation', 'I can do something about it.')
+18:26:46 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:46 [argostranslate.utils] INFO    ('sentences', ['I can do something about it.'])
+18:26:46 [argostranslate.utils] INFO    ('tokenized', [['▁I', '▁can', '▁do', '▁something', '▁about', '▁it', '.']])
+18:26:46 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁お問い合わせ']], scores=[-3.485881805419922], attention=[], logits=[])])
+18:26:46 [argostranslate.utils] INFO    ('value_hypotheses:', [('お問い合わせ', -3.485881805419922)])
+18:26:46 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('お問い合わせ', -3.485881805419922)]])
+18:26:46 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('お問い合わせ', -3.485881805419922)])
+18:26:46 [faster_whisper      ] INFO    Processing audio with duration 00:01.632
+18:26:48 [argostranslate.utils] INFO    ('paragraphs:', ["It's working fine."])
+18:26:48 [argostranslate.utils] INFO    ('apply_packaged_translation', "It's working fine.")
+18:26:48 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:48 [argostranslate.utils] INFO    ('sentences', ["It's working fine."])
+18:26:48 [argostranslate.utils] INFO    ('tokenized', [['▁It', "'", 's', '▁working', '▁fine', '.']])
+18:26:48 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', 'うまく', 'いきます', '。']], scores=[-3.4924771785736084], attention=[], logits=[])])
+18:26:48 [argostranslate.utils] INFO    ('value_hypotheses:', [('うまくいきます。', -3.4924771785736084)])
+18:26:48 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('うまくいきます。', -3.4924771785736084)]])
+18:26:48 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('うまくいきます。', -3.4924771785736084)])
+18:26:52 [faster_whisper      ] INFO    Processing audio with duration 00:01.408
+18:26:54 [argostranslate.utils] INFO    ('paragraphs:', ['Awesome, buddy.'])
+18:26:54 [argostranslate.utils] INFO    ('apply_packaged_translation', 'Awesome, buddy.')
+18:26:54 [argostranslate.utils] INFO    ('Splitting sentences using SBD Model: (en) StanzaSentencizer',)
+18:26:54 [argostranslate.utils] INFO    ('sentences', ['Awesome, buddy.'])
+18:26:54 [argostranslate.utils] INFO    ('tokenized', [['▁A', 'we', 'some', ',', '▁', 'bud', 'dy', '.']])
+18:26:54 [argostranslate.utils] INFO    ('translated_batches', [TranslationResult(hypotheses=[['▁', '素晴らしい', ',', '▁', 'bud', 'dy', '.']], scores=[-2.993088960647583], attention=[], logits=[])])
+18:26:54 [argostranslate.utils] INFO    ('value_hypotheses:', [('素晴らしい, buddy.', -2.993088960647583)])
+18:26:54 [argostranslate.utils] INFO    ('translated_paragraphs:', [[('素晴らしい, buddy.', -2.993088960647583)]])
+18:26:54 [argostranslate.utils] INFO    ('hypotheses_to_return:', [('素晴らしい, buddy.', -2.993088960647583)])
+18:26:56 [mic_capture         ] INFO    Mic capture stopped
+18:26:56 [loopback_capture    ] INFO    Loopback capture stopped
+18:27:10 [asyncio             ] ERROR   Task was destroyed but it is pending!
+task: <Task cancelling name='Task-1' coro=<ChannelPipeline.run() running at C:\Users\rajp2\Desktop\projects\voxbridge\channel.py:201> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()]>>
+18:27:10 [asyncio             ] ERROR   Task was destroyed but it is pending!
+task: <Task cancelling name='Task-2' coro=<ChannelPipeline.run() running at C:\Users\rajp2\Desktop\projects\voxbridge\channel.py:201> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()]>>
