@@ -4,7 +4,7 @@
 AppName=Voxxwire
 AppVersion=1.0.0
 AppPublisher=Jay Parmar and Raj Prajapati
-AppPublisherURL=https://github.com/jayparmar1301/Voxxwire
+AppPublisherURL=https://github.com/raj20023/voxxwire
 DefaultDirName={autopf}\Voxxwire
 DefaultGroupName=Voxxwire
 AllowNoIcons=yes
