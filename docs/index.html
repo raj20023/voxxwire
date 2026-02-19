@@ -76,6 +76,9 @@
                 <div class="stat"><span class="stat-number">&lt;1s</span><span class="stat-label">Latency</span></div>
                 <div class="stat-divider"></div>
                 <div class="stat"><span class="stat-number">0</span><span class="stat-label">Data Sent</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat"><span class="stat-number" id="dl-count">...</span><span
+                        class="stat-label">Downloads</span></div>
             </div>
         </div>
         <div class="hero-visual">
@@ -379,6 +382,50 @@
         }, { threshold: 0.12 });
 
         document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+
+        // ─── Live download counter from GitHub API ───
+        async function fetchDownloadCount() {
+            const el = document.getElementById('dl-count');
+            if (!el) return;
+            try {
+                const res = await fetch(
+                    'https://api.github.com/repos/raj20023/voxxwire/releases',
+                    { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+                );
+                if (!res.ok) throw new Error('API error');
+                const releases = await res.json();
+
+                // Sum download counts across ALL releases and ALL assets
+                let total = 0;
+                releases.forEach(release => {
+                    release.assets.forEach(asset => {
+                        total += asset.download_count;
+                    });
+                });
+
+                // Animate counter from 0 to total
+                animateCount(el, total);
+            } catch (e) {
+                el.textContent = '—';
+            }
+        }
+
+        function animateCount(el, target) {
+            if (target === 0) { el.textContent = '0'; return; }
+            const duration = 1500;
+            const start = performance.now();
+            function update(now) {
+                const elapsed = Math.min((now - start) / duration, 1);
+                // Ease-out cubic
+                const eased = 1 - Math.pow(1 - elapsed, 3);
+                const current = Math.round(eased * target);
+                el.textContent = current.toLocaleString();
+                if (elapsed < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        fetchDownloadCount();
     </script>
 </body>
 
