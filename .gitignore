@@ -23,3 +23,7 @@ piper_voices/
 # OS files
 Thumbs.db
 .DS_Store
+
+# Research paper
+Voxxwire_Research_Paper.docx
+paper_figures/

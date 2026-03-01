@@ -52,89 +52,77 @@ img {
     display: block;
 }
 
-/* ── Top Banners ───────────────────────────────────────────────────────── */
-.top-banner {
-    position: relative;
-    z-index: 200;
-    padding: 10px 32px;
-    font-size: .85rem;
-    line-height: 1.5;
-    animation: bannerSlideIn .5s ease-out both;
-}
-
-@keyframes bannerSlideIn {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.smartscreen-banner {
-    background: linear-gradient(135deg, rgba(255, 171, 64, .12), rgba(255, 87, 34, .08));
-    border-bottom: 1px solid rgba(255, 171, 64, .2);
-}
-
-.prototype-banner {
-    background: linear-gradient(135deg, rgba(0, 212, 255, .08), rgba(123, 47, 247, .06));
-    border-bottom: 1px solid rgba(0, 212, 255, .15);
-    animation-delay: .15s;
-}
-
-.banner-inner {
-    max-width: 1100px;
-    margin: 0 auto;
+/* ── Hero Notice Cards ─────────────────────────────────────────────────── */
+.hero-notice {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: .82rem;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    max-width: 540px;
+    animation: fadeInUp .6s ease-out both;
+    transition: opacity .3s ease, max-height .3s ease;
 }
 
-.banner-icon {
-    font-size: 1.2rem;
+.smartscreen-notice {
+    background: rgba(255, 171, 64, .08);
+    border: 1px solid rgba(255, 171, 64, .2);
+    animation-delay: .5s;
+}
+
+.prototype-notice {
+    background: rgba(0, 212, 255, .06);
+    border: 1px solid rgba(0, 212, 255, .15);
+    animation-delay: .65s;
+}
+
+.notice-icon {
+    font-size: 1rem;
     flex-shrink: 0;
 }
 
-.banner-badge {
+.notice-badge {
     flex-shrink: 0;
-    font-size: .7rem;
+    font-size: .65rem;
     font-weight: 700;
     letter-spacing: 1px;
-    padding: 3px 10px;
-    border-radius: 20px;
+    padding: 2px 8px;
+    border-radius: 10px;
     background: linear-gradient(135deg, var(--accent2), var(--accent));
     color: #fff;
 }
 
-.banner-text {
+.notice-text {
     flex: 1;
     color: var(--text-dim);
+    font-size: .8rem;
 }
 
-.banner-text strong {
+.notice-text strong {
     color: var(--text);
 }
 
-.banner-text a {
+.notice-text a {
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
+    font-weight: 600;
 }
 
-.banner-text a:hover {
+.notice-text a:hover {
     color: #fff;
 }
 
-.banner-close {
+.notice-close {
     background: transparent;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, .08);
     color: var(--text-dim);
-    font-size: 18px;
-    width: 28px;
-    height: 28px;
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     cursor: pointer;
     flex-shrink: 0;
@@ -145,7 +133,7 @@ img {
     line-height: 1;
 }
 
-.banner-close:hover {
+.notice-close:hover {
     background: rgba(255, 255, 255, .08);
     color: var(--text);
     border-color: rgba(255, 255, 255, .2);

@@ -27,32 +27,6 @@
 
 <body>
 
-    <!-- ═══════════ TOP NOTICE BANNERS ═══════════ -->
-    <div class="top-banner smartscreen-banner" id="smartscreenBanner">
-        <div class="banner-inner">
-            <span class="banner-icon">🛡️</span>
-            <span class="banner-text">
-                <strong>Note:</strong> You may see a "Windows protected your PC" warning when installing.
-                Click <strong>"More info"</strong> → <strong>"Run anyway"</strong> to proceed.
-                We are working on getting a Microsoft licence to remove this warning.
-            </span>
-            <button class="banner-close" id="smartscreenClose" title="Dismiss">&times;</button>
-        </div>
-    </div>
-
-    <div class="top-banner prototype-banner" id="prototypeBanner">
-        <div class="banner-inner">
-            <span class="banner-badge">🚀 BETA</span>
-            <span class="banner-text">
-                This is a working prototype — there might be some glitches, we'll fix them soon!
-                Please report any issues
-                <a href="https://github.com/raj20023/voxxwire/issues" target="_blank"
-                    rel="noopener noreferrer">here</a>.
-            </span>
-            <button class="banner-close" id="prototypeClose" title="Dismiss">&times;</button>
-        </div>
-    </div>
-
     <!-- ═══════════ NAVIGATION ═══════════ -->
     <nav id="main-nav">
         <div class="nav-inner">
@@ -78,6 +52,27 @@
         </div>
         <div class="hero-content">
             <div class="hero-badge">100% Offline · No Cloud · No Subscriptions</div>
+
+            <!-- Notice Banners -->
+            <div class="hero-notice smartscreen-notice" id="smartscreenBanner">
+                <span class="notice-icon">🛡️</span>
+                <span class="notice-text">
+                    <strong>Note:</strong> You may see a "Windows protected your PC" warning.
+                    Click <strong>"More info"</strong> → <strong>"Run anyway"</strong>.
+                    We're working on getting a Microsoft licence.
+                </span>
+                <button class="notice-close" id="smartscreenClose">&times;</button>
+            </div>
+            <div class="hero-notice prototype-notice" id="prototypeBanner">
+                <span class="notice-icon">🚀</span>
+                <span class="notice-badge">BETA</span>
+                <span class="notice-text">
+                    Working prototype — some glitches may occur.
+                    <a href="https://github.com/raj20023/voxxwire/issues" target="_blank"
+                        rel="noopener noreferrer">Report issues</a>
+                </span>
+                <button class="notice-close" id="prototypeClose">&times;</button>
+            </div>
             <h1>Translate Speech<br><span class="gradient-text">In Real Time.</span></h1>
             <p class="hero-subtitle">
                 Voxxwire is a free, fully offline desktop translator that listens to your microphone
@@ -85,7 +80,7 @@
                 — all without ever touching the internet.
             </p>
             <div class="hero-actions">
-                <a href="https://github.com/raj20023/voxxwire/releases/download/v1.0.0/Voxxwire-Setup.exe"
+                <a href="https://github.com/raj20023/voxxwire/releases/download/v1.2.0/Voxxwire-Setup.exe"
                     class="btn btn-primary" id="hero-download-btn" download>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -337,7 +332,7 @@
             <span class="section-badge">Get Started</span>
             <h2>Download <span class="gradient-text">Voxxwire</span></h2>
             <p class="download-desc">Free. Offline. Forever yours.</p>
-            <a href="https://github.com/raj20023/voxxwire/releases/download/v1.0.0/Voxxwire-Setup.exe"
+            <a href="https://github.com/raj20023/voxxwire/releases/download/v1.2.0/Voxxwire-Setup.exe"
                 class="btn btn-primary btn-large" id="main-download-btn" download>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -354,8 +349,6 @@
                     Simply click <strong>"More info"</strong> → <strong>"Run anyway"</strong>. This happens because we
                     haven't purchased a
                     code-signing certificate yet — the app is fully open-source and safe.
-                    <a href="https://github.com/raj20023/voxxwire" target="_blank" rel="noopener noreferrer">View source
-                        code →</a>
                 </p>
             </div>
         </div>
