@@ -15,18 +15,20 @@ let pollInterval = null;
 // ═══════════════════════════════════════════════════════════════════════════
 const $ = (id) => document.getElementById(id);
 
-const statusDot       = $('statusDot');
-const statusText      = $('statusText');
-const startBtn        = $('startBtn');
-const outputMessages  = $('outputMessages');
-const outputWelcome   = $('outputWelcome');
-const logText         = $('logText');
-const logArea         = $('logArea');
-const logToggle       = $('logToggle');
-const progressBar     = $('progressBar');
+const statusDot = $('statusDot');
+const statusText = $('statusText');
+const startBtn = $('startBtn');
+const micMessages = $('micMessages');
+const lbMessages = $('lbMessages');
+const micWelcome = $('micWelcome');
+const lbWelcome = $('lbWelcome');
+const micOutputScroll = $('micOutputScroll');
+const lbOutputScroll = $('lbOutputScroll');
+const logText = $('logText');
+const logArea = $('logArea');
+const logToggle = $('logToggle');
+const progressBar = $('progressBar');
 const progressContainer = $('progressContainer');
-const clearBtn        = $('clearBtn');
-const outputScroll    = $('outputScroll');
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  INITIALIZATION
@@ -66,15 +68,52 @@ function populateDevices(devices) {
     micSelect.innerHTML = '';
     lbSelect.innerHTML = '';
 
+    // Populate both selects
     devices.inputs.forEach(d => {
-        const opt = new Option(d.name, d.index);
-        micSelect.add(opt);
+        micSelect.add(new Option(d.name, d.index));
+    });
+    devices.inputs.forEach(d => {
+        lbSelect.add(new Option(d.name, d.index));
     });
 
-    devices.inputs.forEach(d => {
-        const opt = new Option(d.name, d.index);
-        lbSelect.add(opt);
+    // Auto-select best microphone (prefer headset/headphone, then default)
+    const micDevices = devices.inputs;
+    const headsetMic = micDevices.find(d => /headset|headphone|earphone|airpod|buds/i.test(d.name));
+    const defaultMic = micDevices.find(d => /microphone|mic|default/i.test(d.name));
+    const bestMic = headsetMic || defaultMic || micDevices[0];
+    if (bestMic) {
+        micSelect.value = bestMic.index;
+        $('micDeviceName').textContent = truncateDeviceName(bestMic.name);
+    } else {
+        $('micDeviceName').textContent = 'No device found';
+    }
+
+    // Auto-select best loopback (prefer stereo mix / loopback / WASAPI)
+    const lbDevices = devices.inputs;
+    const loopbackDevice = lbDevices.find(d => /stereo mix|loopback|wasapi|what u hear|wave out/i.test(d.name));
+    const bestLb = loopbackDevice || lbDevices[lbDevices.length - 1] || lbDevices[0];
+    if (bestLb) {
+        lbSelect.value = bestLb.index;
+        $('lbDeviceName').textContent = truncateDeviceName(bestLb.name);
+    } else {
+        $('lbDeviceName').textContent = 'No device found';
+    }
+
+    // Update chip names when selects change manually
+    micSelect.addEventListener('change', () => {
+        const selected = micSelect.options[micSelect.selectedIndex];
+        if (selected) $('micDeviceName').textContent = truncateDeviceName(selected.text);
     });
+    lbSelect.addEventListener('change', () => {
+        const selected = lbSelect.options[lbSelect.selectedIndex];
+        if (selected) $('lbDeviceName').textContent = truncateDeviceName(selected.text);
+    });
+}
+
+function truncateDeviceName(name) {
+    // Clean up common prefixes and truncate if too long
+    let clean = name.replace(/^\(\d+\)\s*/, '').replace(/\s*\(.*?\)\s*$/, '').trim();
+    return clean.length > 30 ? clean.substring(0, 28) + '…' : clean;
 }
 
 function populateLanguages(languages) {
@@ -90,8 +129,16 @@ function populateLanguages(languages) {
 
 function applySettings(s) {
     // Devices
-    $('micDevice').value = s.mic_device ?? '';
-    $('loopbackDevice').value = s.loopback_device ?? '';
+    const micSelect = $('micDevice');
+    const lbSelect = $('loopbackDevice');
+    micSelect.value = s.mic_device ?? '';
+    lbSelect.value = s.loopback_device ?? '';
+
+    // Update chip names to reflect applied settings
+    const micOpt = micSelect.options[micSelect.selectedIndex];
+    if (micOpt) $('micDeviceName').textContent = truncateDeviceName(micOpt.text);
+    const lbOpt = lbSelect.options[lbSelect.selectedIndex];
+    if (lbOpt) $('lbDeviceName').textContent = truncateDeviceName(lbOpt.text);
 
     // Languages
     $('micSrcLang').value = s.mic_src_lang;
@@ -138,10 +185,24 @@ logToggle.addEventListener('click', () => {
     logArea.classList.toggle('expanded');
 });
 
-// Clear output
-clearBtn.addEventListener('click', () => {
-    outputMessages.innerHTML = '';
-    outputWelcome.classList.remove('hidden');
+// Clear mic output
+$('clearMicBtn').addEventListener('click', () => {
+    micMessages.innerHTML = '';
+    micWelcome.classList.remove('hidden');
+});
+
+// Clear loopback output
+$('clearLbBtn').addEventListener('click', () => {
+    lbMessages.innerHTML = '';
+    lbWelcome.classList.remove('hidden');
+});
+
+// Device chip toggles — show/hide the dropdown
+$('micDeviceChangeBtn').addEventListener('click', () => {
+    $('micDeviceSelectWrap').classList.toggle('visible');
+});
+$('lbDeviceChangeBtn').addEventListener('click', () => {
+    $('lbDeviceSelectWrap').classList.toggle('visible');
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -275,32 +336,50 @@ function appendLog(text) {
 }
 
 function addTranslation(msg) {
-    outputWelcome.classList.add('hidden');
+    // Route to correct panel
+    const isLoopback = msg.channel === 'loopback';
+    const container = isLoopback ? lbMessages : micMessages;
+    const welcome = isLoopback ? lbWelcome : micWelcome;
+    const scroll = isLoopback ? lbOutputScroll : micOutputScroll;
+
+    welcome.classList.add('hidden');
 
     const item = document.createElement('div');
-    item.className = 'msg-item' + (msg.channel === 'loopback' ? ' loopback' : '');
+    item.className = 'msg-item';
 
-    const channelLabel = msg.channel === 'mic' ? '🎙️ Your Speech' : '🔊 Remote Speech';
+    const langInfo = `${msg.src_lang} → ${msg.tgt_lang}`;
 
     item.innerHTML = `
-        <div class="msg-channel">${channelLabel} · ${msg.src_lang} → ${msg.tgt_lang}</div>
+        <div class="msg-channel">${langInfo}</div>
         <div class="msg-original">${escapeHtml(msg.original)}</div>
         <div class="msg-translated">${escapeHtml(msg.translated)}</div>
     `;
 
-    outputMessages.appendChild(item);
+    container.appendChild(item);
 
-    // Keep max 50 messages
-    while (outputMessages.children.length > 50) {
-        outputMessages.removeChild(outputMessages.firstChild);
+    // Keep max 50 messages per panel
+    while (container.children.length > 50) {
+        container.removeChild(container.firstChild);
     }
 
     // Auto-scroll
-    outputScroll.scrollTop = outputScroll.scrollHeight;
+    scroll.scrollTop = scroll.scrollHeight;
 }
 
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  PROTOTYPE BANNER DISMISS
+// ═══════════════════════════════════════════════════════════════════════════
+const prototypeBannerClose = $('prototypeBannerClose');
+const prototypeBanner = $('prototypeBanner');
+
+if (prototypeBannerClose && prototypeBanner) {
+    prototypeBannerClose.addEventListener('click', () => {
+        prototypeBanner.classList.add('hidden');
+    });
 }

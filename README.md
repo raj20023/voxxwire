@@ -1,5 +1,7 @@
 # Real-Time Offline Speech Translator (Windows)
 
+🌐 **Live App:** [https://voxxwire.com/](https://voxxwire.com/)
+
 ## What This Does
 Two-channel real-time speech translator for live meetings:
 - **Channel A (Mic):** You speak English → translated to Hindi or Japanese (subtitles + spoken audio)
