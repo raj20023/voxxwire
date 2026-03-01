@@ -27,6 +27,32 @@
 
 <body>
 
+    <!-- ═══════════ TOP NOTICE BANNERS ═══════════ -->
+    <div class="top-banner smartscreen-banner" id="smartscreenBanner">
+        <div class="banner-inner">
+            <span class="banner-icon">🛡️</span>
+            <span class="banner-text">
+                <strong>Note:</strong> You may see a "Windows protected your PC" warning when installing.
+                Click <strong>"More info"</strong> → <strong>"Run anyway"</strong> to proceed.
+                We are working on getting a Microsoft licence to remove this warning.
+            </span>
+            <button class="banner-close" id="smartscreenClose" title="Dismiss">&times;</button>
+        </div>
+    </div>
+
+    <div class="top-banner prototype-banner" id="prototypeBanner">
+        <div class="banner-inner">
+            <span class="banner-badge">🚀 BETA</span>
+            <span class="banner-text">
+                This is a working prototype — there might be some glitches, we'll fix them soon!
+                Please report any issues
+                <a href="https://github.com/raj20023/voxxwire/issues" target="_blank"
+                    rel="noopener noreferrer">here</a>.
+            </span>
+            <button class="banner-close" id="prototypeClose" title="Dismiss">&times;</button>
+        </div>
+    </div>
+
     <!-- ═══════════ NAVIGATION ═══════════ -->
     <nav id="main-nav">
         <div class="nav-inner">
@@ -322,6 +348,16 @@
             </a>
             <p class="download-note">Requires Windows 10/11 64-bit · ~850 MB after installation · No internet required
                 after setup</p>
+            <div class="download-warning">
+                <p>⚠️ <strong>SmartScreen Warning:</strong> When installing, Windows may show a "Windows protected your
+                    PC" message.
+                    Simply click <strong>"More info"</strong> → <strong>"Run anyway"</strong>. This happens because we
+                    haven't purchased a
+                    code-signing certificate yet — the app is fully open-source and safe.
+                    <a href="https://github.com/raj20023/voxxwire" target="_blank" rel="noopener noreferrer">View source
+                        code →</a>
+                </p>
+            </div>
         </div>
     </section>
 
@@ -426,6 +462,14 @@
         }
 
         fetchDownloadCount();
+
+        // ─── Banner dismiss ───
+        document.getElementById('smartscreenClose')?.addEventListener('click', () => {
+            document.getElementById('smartscreenBanner').style.display = 'none';
+        });
+        document.getElementById('prototypeClose')?.addEventListener('click', () => {
+            document.getElementById('prototypeBanner').style.display = 'none';
+        });
     </script>
 </body>
 
