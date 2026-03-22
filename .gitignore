@@ -27,3 +27,7 @@ Thumbs.db
 # Research paper
 Voxxwire_Research_Paper.docx
 paper_figures/
+
+# Environment
+.venv/
+venv/
