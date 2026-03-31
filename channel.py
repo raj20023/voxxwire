@@ -7,6 +7,9 @@ Each channel (mic, loopback) has its own pipeline:
 VAD runs continuously in its own task so audio is NEVER dropped during
 ASR/translation. The utterance queue decouples the two stages.
 
+Each channel gets its own thread pool so mic and loopback pipelines
+never starve each other for CPU resources.
+
 Runs as an async task, consuming audio chunks from the capture queue.
 """
 
@@ -27,11 +30,6 @@ import config
 
 logger = logging.getLogger(__name__)
 
-# Thread pool for CPU-bound work (ASR, Translation, TTS)
-_executor = concurrent.futures.ThreadPoolExecutor(
-    max_workers=4, thread_name_prefix="pipeline"
-)
-
 
 class ChannelPipeline:
     """
@@ -42,6 +40,7 @@ class ChannelPipeline:
     2. ASR task: picks up utterances -> ASR -> translate -> output
 
     This ensures audio is NEVER dropped while ASR/translation is running.
+    Each channel has its own thread pool to prevent mic/loopback starvation.
     """
 
     def __init__(
@@ -66,8 +65,13 @@ class ChannelPipeline:
         self.subtitles = subtitles
         self.audio_player = audio_player
         self._running = False
-        # Internal queue between VAD task and ASR task (max 10 utterances buffered)
-        self._utterance_queue: asyncio.Queue = asyncio.Queue(maxsize=10)
+        # Internal queue between VAD task and ASR task
+        # Larger buffer to absorb bursts while ASR processes on CPU
+        self._utterance_queue: asyncio.Queue = asyncio.Queue(maxsize=20)
+        # Per-channel thread pool: 2 workers (1 ASR + 1 translation concurrently)
+        self._executor = concurrent.futures.ThreadPoolExecutor(
+            max_workers=2, thread_name_prefix=f"ch-{name}"
+        )
 
     async def _vad_task(self, channel_vad: SileroVAD):
         """
@@ -112,6 +116,14 @@ class ChannelPipeline:
         """
         Picks up complete utterances and runs ASR -> translation -> output.
         Runs independently so VAD keeps collecting audio while this processes.
+
+        Translation strategy:
+        - For non-English source: Whisper uses task="translate" to produce
+          English directly (much more accurate than Argos for hi/ja→en).
+        - If target is English: we're done, no Argos needed.
+        - If target is non-English: use Argos only for en→target
+          (a much stronger translation direction for Argos).
+        - For English source: Whisper transcribes, Argos translates en→target.
         """
         while self._running:
             try:
@@ -122,38 +134,85 @@ class ChannelPipeline:
                 except asyncio.TimeoutError:
                     continue
 
-                logger.debug(
-                    f"[{self.name}] Processing utterance: "
-                    f"{len(utterance)/config.SAMPLE_RATE:.2f}s"
-                )
+                # ── Merge queued utterances ──
+                # When ASR is slow (CPU), multiple utterances pile up.
+                # Merge them into one to reduce total ASR calls.
+                max_samples = int(config.MAX_SPEECH_DURATION_S * config.SAMPLE_RATE)
+                merged = [utterance]
+                total_len = len(utterance)
+                while not self._utterance_queue.empty() and total_len < max_samples:
+                    try:
+                        extra = self._utterance_queue.get_nowait()
+                        if total_len + len(extra) > max_samples:
+                            break  # don't exceed max duration
+                        merged.append(extra)
+                        total_len += len(extra)
+                    except asyncio.QueueEmpty:
+                        break
+
+                if len(merged) > 1:
+                    utterance = np.concatenate(merged)
+                    logger.info(
+                        f"[{self.name}] Merged {len(merged)} utterances -> "
+                        f"{len(utterance)/config.SAMPLE_RATE:.2f}s"
+                    )
+                else:
+                    logger.debug(
+                        f"[{self.name}] Processing utterance: "
+                        f"{len(utterance)/config.SAMPLE_RATE:.2f}s"
+                    )
 
                 # Run ASR in thread pool (CPU-intensive)
+                # For non-English source, Whisper's translate task outputs English
                 transcript = await loop.run_in_executor(
-                    _executor,
+                    self._executor,
                     self.asr.transcribe,
                     utterance,
                     self.source_lang,
+                    self.target_lang,
                 )
 
                 if not transcript or not transcript.strip():
                     continue
 
-                # Translate in thread pool
-                translated = await loop.run_in_executor(
-                    _executor,
-                    translate_text,
-                    transcript,
-                    self.source_lang,
-                    self.target_lang,
-                )
+                # Determine if Argos translation is still needed
+                if self.source_lang == self.target_lang:
+                    # Same language — no translation
+                    translated = transcript
+                elif self.source_lang != "en" and self.target_lang == "en":
+                    # Whisper already produced English via task="translate"
+                    translated = transcript
+                elif self.source_lang != "en" and self.target_lang != "en":
+                    # Whisper produced English; now use Argos for en→target
+                    translated = await loop.run_in_executor(
+                        self._executor,
+                        translate_text,
+                        transcript,
+                        "en",
+                        self.target_lang,
+                    )
+                else:
+                    # English source → non-English target: normal Argos flow
+                    translated = await loop.run_in_executor(
+                        self._executor,
+                        translate_text,
+                        transcript,
+                        self.source_lang,
+                        self.target_lang,
+                    )
 
                 if not translated:
                     continue
 
+                # For display: show the original source-language text when available
+                # When Whisper translated, 'transcript' is already English, so
+                # we show it as the original (which is the best we have)
+                original_display = transcript
+
                 # Output: subtitles
                 self.subtitles.show(
                     channel=self.name,
-                    original=transcript,
+                    original=original_display,
                     translated=translated,
                     source_lang=self.source_lang,
                     target_lang=self.target_lang,
@@ -162,7 +221,7 @@ class ChannelPipeline:
                 # Output: TTS (synthesize in thread pool, then queue for playback)
                 if config.ENABLE_TTS_OUTPUT:
                     tts_audio = await loop.run_in_executor(
-                        _executor,
+                        self._executor,
                         self.tts.synthesize,
                         translated,
                         self.target_lang,
@@ -207,3 +266,4 @@ class ChannelPipeline:
     def stop(self):
         """Signal the pipeline to stop."""
         self._running = False
+        self._executor.shutdown(wait=False)

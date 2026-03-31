@@ -3,6 +3,13 @@ Configuration for Real-Time Offline Speech Translator.
 Edit these values to match your system and language needs.
 """
 
+import os
+
+# Path for persisted user settings (saved/loaded automatically)
+SETTINGS_FILE: str = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "user_settings.json"
+)
+
 # =============================================================================
 # AUDIO DEVICE SETTINGS
 # Run `python list_devices.py` to find your device indices
@@ -75,11 +82,13 @@ WHISPER_COMPUTE_TYPE: str = "auto"
 
 # Minimum audio duration (seconds) to send to ASR
 # Prevents sending tiny fragments
-MIN_SPEECH_DURATION_S: float = 0.3  # Lowered to catch shorter phrases
+MIN_SPEECH_DURATION_S: float = 0.5  # Minimum utterance length to avoid noise-as-speech
 
 # Maximum audio buffer before forcing ASR (seconds)
-# Prevents accumulating too much audio in RAM
-MAX_SPEECH_DURATION_S: float = 15.0
+# Shorter chunks process faster on CPU, reducing pipeline backlog.
+# With utterance merging in channel.py, shorter chunks get batched
+# automatically when ASR falls behind.
+MAX_SPEECH_DURATION_S: float = 8.0
 
 # =============================================================================
 # VAD SETTINGS (Silero)
@@ -87,13 +96,50 @@ MAX_SPEECH_DURATION_S: float = 15.0
 
 # Speech probability threshold (0.0 - 1.0)
 # Higher = more conservative (fewer false triggers)
-VAD_THRESHOLD: float = 0.2  # Lower = more sensitive (good for normal speaking distance)
+VAD_THRESHOLD: float = 0.35  # Balanced: avoids false triggers on ambient noise
 
 # Minimum silence duration (ms) to consider speech ended
 VAD_MIN_SILENCE_MS: int = 500  # Reduced for snappier response
 
 # Speech padding (ms) — audio kept before/after detected speech
 VAD_SPEECH_PAD_MS: int = 100
+
+# =============================================================================
+# HALLUCINATION FILTER SETTINGS
+# =============================================================================
+
+# Minimum RMS energy for an utterance to be sent to ASR
+# Utterances below this are likely silence/noise and would cause hallucinations
+MIN_UTTERANCE_ENERGY: float = 0.005
+
+# Whisper no_speech_threshold: if the no-speech probability is above this,
+# the segment is treated as silence (higher = more permissive)
+WHISPER_NO_SPEECH_THRESHOLD: float = 0.5
+
+# Whisper log_prob_threshold: segments with average log probability below
+# this value are discarded (helps filter low-confidence hallucinations)
+WHISPER_LOG_PROB_THRESHOLD: float = -1.0
+
+# Known Whisper hallucination patterns (case-insensitive substrings)
+# If the entire transcript matches one of these, it is discarded
+HALLUCINATION_PATTERNS: list[str] = [
+    "mainstream",
+    "thank you",
+    "thanks for watching",
+    "subscribe",
+    "like and subscribe",
+    "please subscribe",
+    "you",
+    "the",
+    "i'm sorry",
+    "bye",
+    "subtitles by",
+    "amara.org",
+]
+
+# Maximum ratio of repeated words in a transcript to consider it a hallucination
+# e.g. "mainstream mainstream mainstream" has ratio 1.0 (all same word)
+HALLUCINATION_REPEAT_RATIO: float = 0.6
 
 # =============================================================================
 # TRANSLATION SETTINGS (Argos)

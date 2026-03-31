@@ -13,6 +13,9 @@ __pycache__/
 # Logs
 *.log
 
+# User settings (persisted between sessions)
+user_settings.json
+
 # Piper voices (downloaded at runtime)
 piper_voices/
 
@@ -31,3 +34,4 @@ paper_figures/
 # Environment
 .venv/
 venv/
+env/
