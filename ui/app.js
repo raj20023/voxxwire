@@ -349,9 +349,14 @@ function addTranslation(msg) {
 
     const langInfo = `${msg.src_lang} → ${msg.tgt_lang}`;
 
+    // When Whisper translates directly (e.g. Hindi→English), both
+    // original and translated are the same English text. Skip the duplicate.
+    const showOriginal = msg.original && msg.translated &&
+        msg.original.trim() !== msg.translated.trim();
+
     item.innerHTML = `
         <div class="msg-channel">${langInfo}</div>
-        <div class="msg-original">${escapeHtml(msg.original)}</div>
+        ${showOriginal ? `<div class="msg-original">${escapeHtml(msg.original)}</div>` : ''}
         <div class="msg-translated">${escapeHtml(msg.translated)}</div>
     `;
 

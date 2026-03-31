@@ -10,6 +10,7 @@ Usage:
 
 import sys
 import os
+import json
 import threading
 import logging
 import time
@@ -95,6 +96,32 @@ def get_audio_devices():
         return inputs, outputs
     except Exception:
         return [], []
+
+
+# ---------------------------------------------------------------------------
+# HELPER: SETTINGS PERSISTENCE
+# ---------------------------------------------------------------------------
+def _save_user_settings(settings: dict):
+    """Persist user settings to JSON file."""
+    try:
+        with open(config.SETTINGS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(settings, f, indent=2)
+        logger.info(f"Settings saved to {config.SETTINGS_FILE}")
+    except Exception as e:
+        logger.warning(f"Could not save settings: {e}")
+
+
+def _load_user_settings() -> dict | None:
+    """Load previously saved user settings from JSON file."""
+    try:
+        if os.path.isfile(config.SETTINGS_FILE):
+            with open(config.SETTINGS_FILE, 'r', encoding='utf-8') as f:
+                settings = json.load(f)
+            logger.info(f"Settings loaded from {config.SETTINGS_FILE}")
+            return settings
+    except Exception as e:
+        logger.warning(f"Could not load settings: {e}")
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -192,6 +219,10 @@ class Api:
         return [{"name": name, "code": code} for name, code in sorted(LANGUAGES.items())]
 
     def get_settings(self):
+        # Try to load persisted settings first, fall back to config defaults
+        saved = _load_user_settings()
+        if saved:
+            return saved
         return {
             "mic_device": config.MIC_DEVICE_INDEX,
             "loopback_device": config.LOOPBACK_DEVICE_INDEX,
@@ -220,6 +251,20 @@ class Api:
         config.ENABLE_MIC_CHANNEL = settings.get('mic_channel', True)
         config.ENABLE_LOOPBACK_CHANNEL = settings.get('loopback_channel', True)
         config.ENABLE_TTS_OUTPUT = False
+
+        # Persist settings for next session
+        _save_user_settings({
+            "mic_device": config.MIC_DEVICE_INDEX,
+            "loopback_device": config.LOOPBACK_DEVICE_INDEX,
+            "mic_src_lang": config.MIC_SOURCE_LANG,
+            "mic_tgt_lang": config.MIC_TARGET_LANG,
+            "lb_src_lang": config.LOOPBACK_SOURCE_LANG,
+            "lb_tgt_lang": config.LOOPBACK_TARGET_LANG,
+            "whisper_model": config.WHISPER_MODEL_SIZE,
+            "subtitles": config.ENABLE_SUBTITLES,
+            "mic_channel": config.ENABLE_MIC_CHANNEL,
+            "loopback_channel": config.ENABLE_LOOPBACK_CHANNEL,
+        })
 
         self._stop_event.clear()
         self._running = True
