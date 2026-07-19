@@ -2,7 +2,7 @@
 
 [Setup]
 AppName=Voxxwire
-AppVersion=1.0.0
+AppVersion=1.4.0
 AppPublisher=Jay Parmar and Raj Prajapati
 AppPublisherURL=https://github.com/raj20023/voxxwire
 DefaultDirName={autopf}\Voxxwire

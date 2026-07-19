@@ -19,16 +19,12 @@ SETTINGS_FILE: str = os.path.join(
 # Device [1] = Microphone (2- Realtek(R) Audio) — your default mic
 MIC_DEVICE_INDEX: int | None = 1
 
-# System audio loopback device index
-# Device [28] = Stereo Mix (Realtek HD Audio Stereo input) — captures system audio
-# This is more reliable than WASAPI loopback on most systems.
-# Alternative: use device [14] (WASAPI Headphones output) for WASAPI loopback mode
-LOOPBACK_DEVICE_INDEX: int | None = 28
-
-# Whether the loopback device is a regular input (like Stereo Mix)
-# or a WASAPI output device that needs loopback mode.
-# Set True for device [28] Stereo Mix, False for device [14] WASAPI output
-LOOPBACK_IS_INPUT_DEVICE: bool = True
+# System audio loopback device index (pyaudiowpatch WASAPI device index,
+# NOT a sounddevice index — these are separate numbering schemes).
+# None = auto-detect the loopback counterpart of the current default
+# output device. Captures actual speaker/headphone output via WASAPI —
+# fully independent of the microphone, so mic and remote audio can't mix.
+LOOPBACK_DEVICE_INDEX: int | None = None
 
 # Audio sample rate (16000 is optimal for speech recognition)
 SAMPLE_RATE: int = 16000

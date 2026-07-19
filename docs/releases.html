@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Voxxwire changelog — every release, version by version, synced automatically from GitHub.">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/releases.html">
+    <meta property="og:title" content="Voxxwire — Changelog">
+    <meta property="og:description" content="Every Voxxwire release, in one place — auto-synced from GitHub.">
+    <meta property="og:url" content="https://voxxwire.com/releases.html">
+    <meta property="og:type" content="website">
+    <title>Changelog — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#demo">Demo</a>
+                <a href="index.html#languages">Languages</a>
+                <a href="index.html#faq">FAQ</a>
+                <a href="releases.html" class="current">Releases</a>
+                <a href="index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ CHANGELOG HERO ═══════════ -->
+    <header id="changelog-hero">
+        <div class="section-inner">
+            <span class="section-badge">Changelog</span>
+            <h1>Voxxwire <span class="accent-text">Release Notes</span></h1>
+            <p class="section-lead">Every update we've shipped, version by version — this page is generated live from
+                our GitHub releases, so it's always current.</p>
+        </div>
+    </header>
+
+    <!-- ═══════════ CHANGELOG TIMELINE ═══════════ -->
+    <section id="changelog">
+        <div class="section-inner changelog-inner">
+            <div id="changelog-timeline" class="changelog-timeline">
+                <div class="changelog-loading">Loading release history…</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#demo">Demo</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#faq">FAQ</a>
+                <a href="releases.html">Releases</a>
+                <a href="index.html#download">Download</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="releases-data.js"></script>
+    <script>
+        // ─── Mobile menu toggle ───
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('active');
+        });
+
+        // ─── Navbar scroll effect ───
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ═══════════ Full changelog timeline (live, self-updating) ═══════════
+        const MAX_RELEASES_SHOWN = 30;
+
+        function renderChangelogItem(release, isLatest) {
+            return `
+                <div class="changelog-item ${isLatest ? 'is-latest' : ''}">
+                    <div class="changelog-marker"></div>
+                    <div class="changelog-connector"></div>
+                    <article class="release-card">
+                        <div class="release-head">
+                            <span class="release-version">${escapeHtml(release.tag_name)}</span>
+                            ${isLatest ? '<span class="release-badge">Latest</span>' : ''}
+                            ${release.prerelease ? '<span class="release-badge pre">Pre-release</span>' : ''}
+                            <span class="release-date">${formatReleaseDate(release.published_at || release.created_at)}</span>
+                        </div>
+                        <h3 class="release-title">${escapeHtml(release.name || release.tag_name)}</h3>
+                        <details class="release-details" ${isLatest ? 'open' : ''}>
+                            <summary>Release notes</summary>
+                            <div class="release-body">${renderMarkdown(release.body)}</div>
+                        </details>
+                        ${renderReleaseAssets(release.assets)}
+                    </article>
+                </div>`;
+        }
+
+        async function loadChangelog() {
+            const timelineEl = document.getElementById('changelog-timeline');
+
+            try {
+                const releases = await fetchGithubReleases();
+
+                if (!Array.isArray(releases) || releases.length === 0) {
+                    timelineEl.innerHTML = '<p class="changelog-error">No releases published yet. Check back soon.</p>';
+                    return;
+                }
+
+                // GitHub already returns releases newest-first; keep that order (latest to oldest).
+                const published = releases.filter(r => !r.draft);
+                const latestStable = findLatestStable(published);
+                const shown = published.slice(0, MAX_RELEASES_SHOWN);
+
+                timelineEl.innerHTML = shown
+                    .map(r => renderChangelogItem(r, latestStable && r.tag_name === latestStable.tag_name))
+                    .join('');
+
+                if (published.length > MAX_RELEASES_SHOWN) {
+                    timelineEl.insertAdjacentHTML('afterend', `
+                        <p class="changelog-truncated-note">Showing the ${MAX_RELEASES_SHOWN} most recent releases —
+                            <a href="https://github.com/${GITHUB_REPO}/releases" target="_blank" rel="noopener noreferrer">see the full history on GitHub</a>.</p>`);
+                }
+            } catch (err) {
+                timelineEl.innerHTML = `<p class="changelog-error">Couldn't load the changelog right now.
+                    <a href="https://github.com/${GITHUB_REPO}/releases" target="_blank" rel="noopener noreferrer">View it on GitHub</a>.</p>`;
+            }
+        }
+
+        loadChangelog();
+    </script>
+</body>
+
+</html>

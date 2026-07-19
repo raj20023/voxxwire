@@ -19,7 +19,8 @@
     <title>Voxxwire — Offline Real-Time Speech Translator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -30,11 +31,20 @@
     <!-- ═══════════ NAVIGATION ═══════════ -->
     <nav id="main-nav">
         <div class="nav-inner">
-            <a href="#" class="nav-logo">⚡ Voxxwire</a>
+            <a href="#" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
             <div class="nav-links">
                 <a href="#features">Features</a>
-                <a href="#how-it-works">How It Works</a>
+                <a href="#demo">Demo</a>
                 <a href="#languages">Languages</a>
+                <a href="#faq">FAQ</a>
+                <a href="releases.html">Releases</a>
                 <a href="#download" class="nav-cta">Download</a>
             </div>
             <button id="mobile-menu-btn" aria-label="Toggle menu">
@@ -45,11 +55,8 @@
 
     <!-- ═══════════ HERO ═══════════ -->
     <header id="hero">
-        <div class="hero-bg-orbs">
-            <div class="orb orb-1"></div>
-            <div class="orb orb-2"></div>
-            <div class="orb orb-3"></div>
-        </div>
+        <div class="blob blob-mustard"></div>
+        <div class="blob blob-forest"></div>
         <div class="hero-content">
             <div class="hero-badge">100% Offline · No Cloud · No Subscriptions</div>
 
@@ -73,14 +80,20 @@
                 </span>
                 <button class="notice-close" id="prototypeClose">&times;</button>
             </div>
-            <h1>Translate Speech<br><span class="gradient-text">In Real Time.</span></h1>
+            <h1>Translate speech<br>in <span class="underline-wrap">real time.
+                    <svg viewBox="0 0 300 16" preserveAspectRatio="none" class="squiggle">
+                        <path
+                            d="M2 10 Q 40 2, 80 10 T 160 10 T 240 10 T 298 10"
+                            stroke="var(--mustard)" stroke-width="8" fill="none" stroke-linecap="round"></path>
+                    </svg>
+                </span></h1>
             <p class="hero-subtitle">
                 Voxxwire is a free, fully offline desktop translator that listens to your microphone
                 and system audio, translates speech on the fly, and speaks the translation aloud
                 — all without ever touching the internet.
             </p>
             <div class="hero-actions">
-                <a href="https://github.com/raj20023/voxxwire/releases/download/v1.2.0/Voxxwire-Setup.exe"
+                <a href="https://github.com/raj20023/voxxwire/releases/latest/download/Voxxwire-Setup.exe"
                     class="btn btn-primary" id="hero-download-btn" download>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -125,52 +138,133 @@
                         <span class="tag eng-tag">ENG</span>
                         <span>Yes, I can hear you. Let's begin.</span>
                     </div>
-                    <div class="preview-cursor">|</div>
                 </div>
             </div>
         </div>
     </header>
 
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+            <path
+                d="M0,40 C120,90 240,0 360,40 C480,80 600,0 720,40 C840,80 960,0 1080,40 C1200,80 1320,0 1440,40 L1440,90 L0,90 Z">
+            </path>
+        </svg>
+    </div>
+
     <!-- ═══════════ FEATURES ═══════════ -->
     <section id="features">
         <div class="section-inner">
             <span class="section-badge">Why Voxxwire?</span>
-            <h2>Powerful Features,<br><span class="gradient-text">Zero Compromises.</span></h2>
+            <h2>Powerful Features,<br><span class="accent-text">Zero Compromises.</span></h2>
             <div class="features-grid">
                 <div class="feature-card" data-aos>
-                    <div class="feature-icon">🔒</div>
+                    <span class="feature-index">01</span>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
                     <h3>Fully Offline</h3>
                     <p>All AI models run entirely on your machine. Your conversations never leave your computer — total
                         privacy guaranteed.</p>
                 </div>
                 <div class="feature-card" data-aos>
-                    <div class="feature-icon">⚡</div>
+                    <span class="feature-index">02</span>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
                     <h3>Real-Time</h3>
                     <p>Sub-second latency from speech detection to translated audio output, powered by Whisper ASR and
                         Silero VAD.</p>
                 </div>
                 <div class="feature-card" data-aos>
-                    <div class="feature-icon">🎙️</div>
+                    <span class="feature-index">03</span>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </div>
                     <h3>Dual Channel</h3>
                     <p>Translates your mic and system audio simultaneously — perfect for Zoom, Teams, and Google Meet
                         calls.</p>
                 </div>
                 <div class="feature-card" data-aos>
-                    <div class="feature-icon">🌐</div>
+                    <span class="feature-index">04</span>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
                     <h3>49+ Languages</h3>
                     <p>From Arabic to Vietnamese — translate between 49+ languages with auto-download of language packs
                         on first use.</p>
                 </div>
                 <div class="feature-card" data-aos>
-                    <div class="feature-icon">📝</div>
+                    <span class="feature-index">05</span>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
                     <h3>Live Subtitles</h3>
                     <p>See real-time subtitles for both original and translated speech, with speaker labels and
                         timestamps.</p>
                 </div>
                 <div class="feature-card" data-aos>
-                    <div class="feature-icon">🆓</div>
+                    <span class="feature-index">06</span>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                    </div>
                     <h3>Free & Open</h3>
                     <p>No subscriptions, no API keys, no hidden costs. Download once and use forever.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ PRODUCT DEMO ═══════════ -->
+    <section id="demo">
+        <div class="section-inner">
+            <span class="section-badge">Live Preview</span>
+            <h2>See It <span class="accent-text">In Action</span></h2>
+            <p class="section-lead">A real screenshot of the app — not a mockup. This is exactly what you'll see the
+                moment you hit start.</p>
+            <div class="demo-frame">
+                <img src="assets/app-screenshot.png"
+                    alt="Voxxwire app in use, showing a live translated conversation in the split You / Remote panels"
+                    class="demo-screenshot" width="1280" height="820" loading="lazy">
+            </div>
+            <div class="demo-callouts">
+                <div class="demo-callout" data-aos>
+                    <span class="demo-callout-index">01</span>
+                    <h4>Auto Device Detection</h4>
+                    <p>Picks your best mic and system audio output automatically — no manual setup.</p>
+                </div>
+                <div class="demo-callout" data-aos>
+                    <span class="demo-callout-index">02</span>
+                    <h4>Dual-Channel Split View</h4>
+                    <p>Your voice and the remote speaker's voice, translated side by side in real time.</p>
+                </div>
+                <div class="demo-callout" data-aos>
+                    <span class="demo-callout-index">03</span>
+                    <h4>Live Bilingual Subtitles</h4>
+                    <p>See the original and translated text together, with language tags per line.</p>
+                </div>
+                <div class="demo-callout" data-aos>
+                    <span class="demo-callout-index">04</span>
+                    <h4>One-Click Start</h4>
+                    <p>Pick your Whisper model size and hit start — you're translating in seconds.</p>
                 </div>
             </div>
         </div>
@@ -180,10 +274,10 @@
     <section id="how-it-works">
         <div class="section-inner">
             <span class="section-badge">Under the Hood</span>
-            <h2>How It <span class="gradient-text">Works</span></h2>
+            <h2>How It <span class="accent-text">Works</span></h2>
             <div class="pipeline">
                 <div class="pipeline-step" data-aos>
-                    <div class="step-number">1</div>
+                    <div class="step-number">01</div>
                     <div class="step-content">
                         <h3>Audio Capture</h3>
                         <p>Captures your microphone and system audio streams in real time using low-latency audio
@@ -192,7 +286,7 @@
                 </div>
                 <div class="pipeline-connector"></div>
                 <div class="pipeline-step" data-aos>
-                    <div class="step-number">2</div>
+                    <div class="step-number">02</div>
                     <div class="step-content">
                         <h3>Voice Activity Detection</h3>
                         <p>Silero VAD detects when someone is speaking and segments the audio into utterances, filtering
@@ -201,7 +295,7 @@
                 </div>
                 <div class="pipeline-connector"></div>
                 <div class="pipeline-step" data-aos>
-                    <div class="step-number">3</div>
+                    <div class="step-number">03</div>
                     <div class="step-content">
                         <h3>Speech Recognition</h3>
                         <p>OpenAI's Whisper model (via faster-whisper) transcribes the spoken audio into text with high
@@ -210,7 +304,7 @@
                 </div>
                 <div class="pipeline-connector"></div>
                 <div class="pipeline-step" data-aos>
-                    <div class="step-number">4</div>
+                    <div class="step-number">04</div>
                     <div class="step-content">
                         <h3>Translation</h3>
                         <p>Argos Translate converts the transcribed text from the source language to your target
@@ -219,7 +313,7 @@
                 </div>
                 <div class="pipeline-connector"></div>
                 <div class="pipeline-step" data-aos>
-                    <div class="step-number">5</div>
+                    <div class="step-number">05</div>
                     <div class="step-content">
                         <h3>Output</h3>
                         <p>The translated text is displayed as live subtitles and spoken aloud through Piper TTS voices.
@@ -234,7 +328,7 @@
     <section id="languages">
         <div class="section-inner">
             <span class="section-badge">Supported Languages</span>
-            <h2>Speak Your <span class="gradient-text">Language</span></h2>
+            <h2>Speak Your <span class="accent-text">Language</span></h2>
             <div class="lang-grid">
                 <div class="lang-card" data-aos>
                     <div class="lang-flag">🇬🇧</div>
@@ -291,36 +385,151 @@
     <section id="requirements">
         <div class="section-inner">
             <span class="section-badge">System Requirements</span>
-            <h2>What You <span class="gradient-text">Need</span></h2>
-            <div class="req-grid">
-                <div class="req-item">
-                    <div class="req-icon">💻</div>
-                    <div>
-                        <h4>Windows 10 / 11</h4>
-                        <p>64-bit operating system required</p>
-                    </div>
+            <h2>What You <span class="accent-text">Need</span></h2>
+            <div class="req-card">
+                <div class="req-row">
+                    <span class="req-check ok">✓</span>
+                    <span class="req-label">Operating System</span>
+                    <span class="req-value">Windows 10 / 11 (64-bit)</span>
                 </div>
-                <div class="req-item">
-                    <div class="req-icon">🧠</div>
-                    <div>
-                        <h4>8 GB RAM</h4>
-                        <p>4 GB minimum, 8 GB recommended</p>
-                    </div>
+                <div class="req-row">
+                    <span class="req-check ok">✓</span>
+                    <span class="req-label">Memory</span>
+                    <span class="req-value">8 GB recommended (4 GB minimum)</span>
                 </div>
-                <div class="req-item">
-                    <div class="req-icon">🎮</div>
-                    <div>
-                        <h4>NVIDIA GPU</h4>
-                        <p>Recommended for faster processing (CPU works too)</p>
-                    </div>
+                <div class="req-row">
+                    <span class="req-check maybe">~</span>
+                    <span class="req-label">Graphics Card</span>
+                    <span class="req-value">NVIDIA recommended (CPU supported)</span>
                 </div>
-                <div class="req-item">
-                    <div class="req-icon">🎤</div>
-                    <div>
-                        <h4>Microphone</h4>
-                        <p>Any working microphone for speech input</p>
-                    </div>
+                <div class="req-row">
+                    <span class="req-check ok">✓</span>
+                    <span class="req-label">Microphone</span>
+                    <span class="req-value">Required for speech input</span>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ COMPARISON ═══════════ -->
+    <section id="comparison">
+        <div class="section-inner">
+            <span class="section-badge">Voxxwire vs. Cloud Translators</span>
+            <h2>Why Not Just Use <span class="accent-text">The Cloud?</span></h2>
+            <p class="section-lead">Most translation tools route your conversations through someone else's server.
+                Voxxwire doesn't.</p>
+            <div class="compare-table-wrap">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="compare-col-voxxwire">Voxxwire</th>
+                            <th>Cloud-Based Translators</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Your audio ever leaves your PC</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">Never</span></td>
+                            <td><span class="compare-no">Sent to a server</span></td>
+                        </tr>
+                        <tr>
+                            <td>Works without internet</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">Yes, fully offline</span></td>
+                            <td><span class="compare-no">Requires connection</span></td>
+                        </tr>
+                        <tr>
+                            <td>Monthly cost</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">$0, forever</span></td>
+                            <td><span class="compare-no">Often subscription-based</span></td>
+                        </tr>
+                        <tr>
+                            <td>API keys / account required</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">None</span></td>
+                            <td><span class="compare-no">Usually required</span></td>
+                        </tr>
+                        <tr>
+                            <td>Latency</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">&lt;1s, local</span></td>
+                            <td><span class="compare-no">Network round-trip</span></td>
+                        </tr>
+                        <tr>
+                            <td>Captures system audio (calls, meetings)</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">Built in</span></td>
+                            <td><span class="compare-no">Rarely supported</span></td>
+                        </tr>
+                        <tr>
+                            <td>Source code</td>
+                            <td class="compare-col-voxxwire"><span class="compare-yes">Open, on GitHub</span></td>
+                            <td><span class="compare-no">Closed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FAQ ═══════════ -->
+    <section id="faq">
+        <div class="section-inner">
+            <span class="section-badge">FAQ</span>
+            <h2>Frequently Asked <span class="accent-text">Questions</span></h2>
+            <div class="faq-list">
+                <details class="faq-item" open>
+                    <summary>Is Voxxwire really free?<span class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>Yes — completely free and open source. No subscriptions, no API keys, no hidden costs.
+                            Download once and use it forever.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Does Voxxwire need an internet connection?<span class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>No. Speech recognition (Whisper), translation (Argos Translate), and text-to-speech
+                            (Piper) all run locally on your machine. The app only touches the network to download a
+                            language pack the first time you use a new language pair.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Is any of my audio or conversation data sent anywhere?<span
+                            class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>No. Everything is processed locally in memory. Nothing is uploaded, logged remotely, or
+                            shared with any third party.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Do I need an NVIDIA GPU?<span class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>No, a GPU is optional. Voxxwire runs on CPU too — a GPU just makes transcription and
+                            translation noticeably faster, especially with the larger Whisper models.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Why does Windows show a "protected your PC" warning?<span
+                            class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>Voxxwire doesn't yet have a paid code-signing certificate, so SmartScreen flags it by
+                            default. The app is fully open source — you're welcome to review the code on GitHub. Click
+                            <strong>"More info"</strong> → <strong>"Run anyway"</strong> to continue.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Which apps does Voxxwire work with?<span class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>Any app that plays audio through your system output — Zoom, Google Meet, Microsoft Teams,
+                            Discord, YouTube, and more — since Voxxwire captures system audio directly rather than
+                            integrating with a specific app.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>Is Voxxwire open source?<span class="faq-chevron"></span></summary>
+                    <div class="faq-answer">
+                        <p>Yes. The full source is on <a href="https://github.com/raj20023/voxxwire" target="_blank"
+                                rel="noopener noreferrer">GitHub</a> — issues, pull requests, and contributions are
+                            welcome.</p>
+                    </div>
+                </details>
             </div>
         </div>
     </section>
@@ -328,11 +537,10 @@
     <!-- ═══════════ DOWNLOAD CTA ═══════════ -->
     <section id="download">
         <div class="section-inner download-section">
-            <div class="download-glow"></div>
             <span class="section-badge">Get Started</span>
-            <h2>Download <span class="gradient-text">Voxxwire</span></h2>
+            <h2>Download <span class="accent-text">Voxxwire</span></h2>
             <p class="download-desc">Free. Offline. Forever yours.</p>
-            <a href="https://github.com/raj20023/voxxwire/releases/download/v1.2.0/Voxxwire-Setup.exe"
+            <a href="https://github.com/raj20023/voxxwire/releases/latest/download/Voxxwire-Setup.exe"
                 class="btn btn-primary btn-large" id="main-download-btn" download>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -343,6 +551,8 @@
             </a>
             <p class="download-note">Requires Windows 10/11 64-bit · ~850 MB after installation · No internet required
                 after setup</p>
+            <p class="download-alt">or grab it straight from <a href="https://github.com/raj20023/voxxwire/releases"
+                    target="_blank" rel="noopener noreferrer">GitHub Releases</a></p>
             <div class="download-warning">
                 <p>⚠️ <strong>SmartScreen Warning:</strong> When installing, Windows may show a "Windows protected your
                     PC" message.
@@ -358,12 +568,22 @@
     <footer id="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <span class="footer-logo">⚡ Voxxwire</span>
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
                 <p>Real-Time Offline Speech Translator</p>
             </div>
             <div class="footer-links">
                 <a href="#features">Features</a>
+                <a href="#demo">Demo</a>
                 <a href="#how-it-works">How It Works</a>
+                <a href="#faq">FAQ</a>
+                <a href="releases.html">Releases</a>
                 <a href="#download">Download</a>
             </div>
             <div class="footer-bottom">
@@ -373,6 +593,7 @@
         </div>
     </footer>
 
+    <script src="releases-data.js"></script>
     <script>
         // ─── Mobile menu toggle ───
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -391,10 +612,10 @@
         // ─── Smooth scroll for anchor links ───
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
-                e.preventDefault();
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const targetEl = document.querySelector(a.getAttribute('href'));
+                if (targetEl) {
+                    e.preventDefault();
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     navLinks.classList.remove('open');
                     menuBtn.classList.remove('active');
                 }
@@ -412,50 +633,6 @@
 
         document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
 
-        // ─── Live download counter from GitHub API ───
-        async function fetchDownloadCount() {
-            const el = document.getElementById('dl-count');
-            if (!el) return;
-            try {
-                const res = await fetch(
-                    'https://api.github.com/repos/raj20023/voxxwire/releases',
-                    { headers: { 'Accept': 'application/vnd.github.v3+json' } }
-                );
-                if (!res.ok) throw new Error('API error');
-                const releases = await res.json();
-
-                // Sum download counts across ALL releases and ALL assets
-                let total = 0;
-                releases.forEach(release => {
-                    release.assets.forEach(asset => {
-                        total += asset.download_count;
-                    });
-                });
-
-                // Animate counter from 0 to total
-                animateCount(el, total);
-            } catch (e) {
-                el.textContent = '—';
-            }
-        }
-
-        function animateCount(el, target) {
-            if (target === 0) { el.textContent = '0'; return; }
-            const duration = 1500;
-            const start = performance.now();
-            function update(now) {
-                const elapsed = Math.min((now - start) / duration, 1);
-                // Ease-out cubic
-                const eased = 1 - Math.pow(1 - elapsed, 3);
-                const current = Math.round(eased * target);
-                el.textContent = current.toLocaleString();
-                if (elapsed < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
-        }
-
-        fetchDownloadCount();
-
         // ─── Banner dismiss ───
         document.getElementById('smartscreenClose')?.addEventListener('click', () => {
             document.getElementById('smartscreenBanner').style.display = 'none';
@@ -463,6 +640,36 @@
         document.getElementById('prototypeClose')?.addEventListener('click', () => {
             document.getElementById('prototypeBanner').style.display = 'none';
         });
+
+        // ═══════════ Live download counter (from GitHub releases) ═══════════
+        function animateCount(el, target) {
+            if (target === 0) { el.textContent = '0'; return; }
+            const duration = 1500;
+            const start = performance.now();
+            function update(now) {
+                const elapsed = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - elapsed, 3);
+                el.textContent = Math.round(eased * target).toLocaleString();
+                if (elapsed < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        async function loadDownloadCount() {
+            const dlCountEl = document.getElementById('dl-count');
+            if (!dlCountEl) return;
+
+            try {
+                const releases = await fetchGithubReleases();
+                let totalDownloads = 0;
+                releases.forEach(r => r.assets.forEach(a => { totalDownloads += a.download_count; }));
+                animateCount(dlCountEl, totalDownloads);
+            } catch (err) {
+                dlCountEl.textContent = '—';
+            }
+        }
+
+        loadDownloadCount();
     </script>
 </body>
 

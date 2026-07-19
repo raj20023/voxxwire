@@ -5,6 +5,7 @@ Transcribes audio segments detected by VAD into text.
 Includes hallucination detection to suppress known Whisper artifacts.
 """
 
+import os
 import re
 from collections import Counter
 
@@ -45,9 +46,18 @@ class WhisperASR:
         if compute_type == "auto":
             compute_type = "float16" if device == "cuda" else "int8"
 
+        # On CPU, ctranslate2 defaults to using every logical core for
+        # inference — that starves the real-time mic/loopback audio
+        # callback threads of scheduling time, which is what causes
+        # "input overflow" (dropped audio) during transcription. Leaving
+        # a couple of cores free keeps audio capture responsive. Doesn't
+        # apply on GPU, where inference doesn't compete for CPU cores.
+        cpu_threads = max(2, (os.cpu_count() or 4) - 2) if device == "cpu" else 0
+
         logger.info(
             f"Loading Whisper model: size={model_size}, "
             f"device={device}, compute_type={compute_type}"
+            + (f", cpu_threads={cpu_threads}" if device == "cpu" else "")
         )
 
         try:
@@ -55,6 +65,7 @@ class WhisperASR:
                 model_size,
                 device=device,
                 compute_type=compute_type,
+                cpu_threads=cpu_threads,
             )
             logger.info("Whisper model loaded successfully")
         except Exception as e:
@@ -65,6 +76,7 @@ class WhisperASR:
                     model_size,
                     device="cpu",
                     compute_type="int8",
+                    cpu_threads=max(2, (os.cpu_count() or 4) - 2),
                 )
                 logger.info("Whisper model loaded on CPU")
 
