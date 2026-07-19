@@ -9,6 +9,11 @@
 let isRunning = false;
 let selectedModel = 'small';
 let pollInterval = null;
+let settingsDirty = false;
+let appliedSettingsKey = null;
+let savedSettingsKey = null;
+let lastEngineAction = 'start'; // 'start' or 'restart' — which action Retry repeats
+let transcriptLog = []; // full session history for the Download Transcript button (unlike the on-screen panels, never trimmed)
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  DOM REFERENCES
@@ -27,8 +32,19 @@ const lbOutputScroll = $('lbOutputScroll');
 const logText = $('logText');
 const logArea = $('logArea');
 const logToggle = $('logToggle');
-const progressBar = $('progressBar');
-const progressContainer = $('progressContainer');
+const saveBtn = $('saveBtn');
+const restartBanner = $('restartBanner');
+const restartBtn = $('restartBtn');
+const engineOverlay = $('engineOverlay');
+const engineOverlayTitle = $('engineOverlayTitle');
+const engineOverlayMessage = $('engineOverlayMessage');
+const engineOverlayProgressBar = $('engineOverlayProgressBar');
+const engineOverlayCancelBtn = $('engineOverlayCancelBtn');
+const engineOverlayRetryBtn = $('engineOverlayRetryBtn');
+const downloadTranscriptBtn = $('downloadTranscriptBtn');
+const transcriptCount = $('transcriptCount');
+const micChannelStatus = $('micChannelStatus');
+const lbChannelStatus = $('lbChannelStatus');
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  INITIALIZATION
@@ -51,6 +67,9 @@ async function initApp() {
         // Load current settings
         const settings = await pywebview.api.get_settings();
         applySettings(settings);
+        savedSettingsKey = JSON.stringify(gatherSettings());
+        appliedSettingsKey = savedSettingsKey;
+        saveBtn.disabled = true;
 
     } catch (e) {
         console.error('Init error:', e);
@@ -68,11 +87,17 @@ function populateDevices(devices) {
     micSelect.innerHTML = '';
     lbSelect.innerHTML = '';
 
-    // Populate both selects
+    // Mic uses regular sounddevice input devices.
     devices.inputs.forEach(d => {
         micSelect.add(new Option(d.name, d.index));
     });
-    devices.inputs.forEach(d => {
+
+    // Loopback uses real WASAPI loopback devices (a distinct index
+    // namespace from sounddevice) — every entry here genuinely captures
+    // speaker/headphone output, never the microphone, so "You" and
+    // "Remote" can never overlap.
+    const lbDevices = devices.loopbacks || [];
+    lbDevices.forEach(d => {
         lbSelect.add(new Option(d.name, d.index));
     });
 
@@ -88,15 +113,13 @@ function populateDevices(devices) {
         $('micDeviceName').textContent = 'No device found';
     }
 
-    // Auto-select best loopback (prefer stereo mix / loopback / WASAPI)
-    const lbDevices = devices.inputs;
-    const loopbackDevice = lbDevices.find(d => /stereo mix|loopback|wasapi|what u hear|wave out/i.test(d.name));
-    const bestLb = loopbackDevice || lbDevices[lbDevices.length - 1] || lbDevices[0];
+    // Auto-select the default output's loopback device
+    const bestLb = lbDevices[0];
     if (bestLb) {
         lbSelect.value = bestLb.index;
         $('lbDeviceName').textContent = truncateDeviceName(bestLb.name);
     } else {
-        $('lbDeviceName').textContent = 'No device found';
+        $('lbDeviceName').textContent = 'No loopback device found';
     }
 
     // Update chip names when selects change manually
@@ -134,6 +157,14 @@ function applySettings(s) {
     micSelect.value = s.mic_device ?? '';
     lbSelect.value = s.loopback_device ?? '';
 
+    // A persisted loopback_device may be stale (e.g. an old sounddevice
+    // index from before the switch to WASAPI loopback devices, which use
+    // a different index namespace) — fall back to the first real
+    // loopback option rather than leaving nothing selected.
+    if (lbSelect.selectedIndex === -1 && lbSelect.options.length > 0) {
+        lbSelect.selectedIndex = 0;
+    }
+
     // Update chip names to reflect applied settings
     const micOpt = micSelect.options[micSelect.selectedIndex];
     if (micOpt) $('micDeviceName').textContent = truncateDeviceName(micOpt.text);
@@ -164,10 +195,35 @@ function applySettings(s) {
 
 // Start / Stop button
 startBtn.addEventListener('click', async () => {
+    if (startBtn.disabled) return; // guard against double-clicks firing overlapping start/stop calls
     if (!isRunning) {
         await startEngine();
     } else {
         await stopEngine();
+    }
+});
+
+// Save configuration button
+saveBtn.addEventListener('click', saveConfig);
+
+// Download transcript button
+downloadTranscriptBtn.addEventListener('click', downloadTranscript);
+
+// Restart & Apply button
+restartBtn.addEventListener('click', restartEngine);
+
+// Engine overlay: Cancel (while loading) / Dismiss (after an error)
+engineOverlayCancelBtn.addEventListener('click', async () => {
+    hideEngineOverlay();
+    await stopEngine();
+});
+
+// Engine overlay: Retry after a failed start
+engineOverlayRetryBtn.addEventListener('click', async () => {
+    if (lastEngineAction === 'restart') {
+        await restartEngine();
+    } else {
+        await startEngine();
     }
 });
 
@@ -177,8 +233,17 @@ document.querySelectorAll('.model-card').forEach(card => {
         document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         selectedModel = card.dataset.value;
+        onSettingsChanged();
     });
 });
+
+// Track changes to language/device/toggle settings while the engine is
+// running so we can prompt the user to restart & reload the models —
+// otherwise a language change silently keeps using the old pipeline.
+['micSrcLang', 'micTgtLang', 'lbSrcLang', 'lbTgtLang', 'micDevice', 'loopbackDevice']
+    .forEach(id => $(id).addEventListener('change', onSettingsChanged));
+['toggleSubtitles', 'toggleMic', 'toggleLoopback']
+    .forEach(id => $(id).addEventListener('change', onSettingsChanged));
 
 // Log toggle
 logToggle.addEventListener('click', () => {
@@ -208,9 +273,8 @@ $('lbDeviceChangeBtn').addEventListener('click', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 //  ENGINE CONTROL
 // ═══════════════════════════════════════════════════════════════════════════
-async function startEngine() {
-    // Gather current settings
-    const settings = {
+function gatherSettings() {
+    return {
         mic_device: parseInt($('micDevice').value) || 0,
         loopback_device: parseInt($('loopbackDevice').value) || 0,
         mic_src_lang: $('micSrcLang').value,
@@ -222,26 +286,47 @@ async function startEngine() {
         mic_channel: $('toggleMic').checked,
         loopback_channel: $('toggleLoopback').checked,
     };
+}
+
+async function startEngine() {
+    lastEngineAction = 'start';
+    const settings = gatherSettings();
 
     setStatus('starting', 'Starting…');
     setRunning(true);
-    showProgress(true, 0);
+    showEngineOverlay('Starting translator…', 'Warming things up…');
     logArea.classList.add('expanded');
     appendLog('Starting translator engine…');
+    startBtn.disabled = true;
+    restartBtn.disabled = true;
 
     try {
-        await pywebview.api.start_engine(settings);
-        startPolling();
+        const started = await pywebview.api.start_engine(settings);
+        if (!started) {
+            appendLog('⚠ Engine was already running — ignored duplicate start.\n');
+            hideEngineOverlay();
+        } else {
+            appliedSettingsKey = JSON.stringify(settings);
+            savedSettingsKey = appliedSettingsKey;
+            saveBtn.disabled = true;
+            setSettingsDirty(false);
+            startPolling();
+        }
     } catch (e) {
         appendLog('❌ Failed to start: ' + e.message);
         setStatus('error', 'Error');
         setRunning(false);
-        showProgress(false);
+        showEngineError('Failed to start the translator: ' + e.message);
+    } finally {
+        startBtn.disabled = false;
+        restartBtn.disabled = false;
     }
 }
 
 async function stopEngine() {
     appendLog('Stopping translator…');
+    startBtn.disabled = true;
+    restartBtn.disabled = true;
     try {
         await pywebview.api.stop_engine();
     } catch (e) {
@@ -250,7 +335,100 @@ async function stopEngine() {
     stopPolling();
     setStatus('idle', 'Ready');
     setRunning(false);
-    showProgress(false);
+    hideEngineOverlay();
+    startBtn.disabled = false;
+    restartBtn.disabled = false;
+}
+
+async function saveConfig() {
+    const settings = gatherSettings();
+    try {
+        await pywebview.api.save_settings(settings);
+        savedSettingsKey = JSON.stringify(settings);
+        saveBtn.disabled = true;
+        appendLog('💾 Configuration saved.\n');
+    } catch (e) {
+        appendLog('❌ Failed to save configuration: ' + e.message + '\n');
+    }
+}
+
+async function restartEngine() {
+    if (restartBtn.disabled) return; // guard against double-clicks firing overlapping restarts
+    lastEngineAction = 'restart';
+    const settings = gatherSettings();
+
+    setStatus('starting', 'Reloading models…');
+    showEngineOverlay('Reloading models…', 'Applying your new settings…');
+    logArea.classList.add('expanded');
+    appendLog('🔄 Restarting engine to apply new settings…\n');
+    startBtn.disabled = true;
+    restartBtn.disabled = true;
+
+    try {
+        await pywebview.api.restart_engine(settings);
+        appliedSettingsKey = JSON.stringify(settings);
+        savedSettingsKey = appliedSettingsKey;
+        saveBtn.disabled = true;
+        setSettingsDirty(false);
+        setRunning(true);
+        startPolling();
+    } catch (e) {
+        appendLog('❌ Failed to restart: ' + e.message + '\n');
+        setStatus('error', 'Error');
+        setRunning(false);
+        showEngineError('Failed to restart the translator: ' + e.message);
+    } finally {
+        startBtn.disabled = false;
+        restartBtn.disabled = false;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ENGINE LOADING / ERROR OVERLAY
+// ═══════════════════════════════════════════════════════════════════════════
+function showEngineOverlay(title, message) {
+    engineOverlay.classList.remove('error');
+    engineOverlay.classList.add('visible');
+    engineOverlayTitle.textContent = title;
+    engineOverlayMessage.textContent = message;
+    engineOverlayProgressBar.style.width = '0%';
+    engineOverlayCancelBtn.textContent = 'Cancel';
+    engineOverlayRetryBtn.classList.add('hidden');
+}
+
+function updateEngineOverlay(message) {
+    if (!engineOverlay.classList.contains('visible') || engineOverlay.classList.contains('error')) return;
+    engineOverlayMessage.textContent = message;
+}
+
+function updateEngineOverlayProgress(value) {
+    if (!engineOverlay.classList.contains('visible') || engineOverlay.classList.contains('error')) return;
+    engineOverlayProgressBar.style.width = (value * 100) + '%';
+}
+
+function showEngineError(message) {
+    engineOverlay.classList.add('visible', 'error');
+    engineOverlayTitle.textContent = 'Couldn\'t start the translator';
+    engineOverlayMessage.textContent = message;
+    engineOverlayCancelBtn.textContent = 'Dismiss';
+    engineOverlayRetryBtn.classList.remove('hidden');
+}
+
+function hideEngineOverlay() {
+    engineOverlay.classList.remove('visible', 'error');
+}
+
+function setSettingsDirty(dirty) {
+    settingsDirty = dirty && isRunning;
+    restartBanner.classList.toggle('visible', settingsDirty);
+}
+
+function onSettingsChanged() {
+    const key = JSON.stringify(gatherSettings());
+    saveBtn.disabled = (key === savedSettingsKey);
+    if (isRunning) {
+        setSettingsDirty(key !== appliedSettingsKey);
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -282,15 +460,31 @@ async function pollMessages() {
                     addTranslation(msg);
                     break;
                 case 'progress':
-                    showProgress(true, msg.value);
+                    updateEngineOverlayProgress(msg.value);
                     break;
                 case 'status':
                     setStatus(msg.state, msg.text);
+                    updateEngineOverlay(msg.text);
+                    if (msg.state === 'running') {
+                        hideEngineOverlay();
+                    }
+                    break;
+                case 'error':
+                    showEngineError(msg.text);
+                    break;
+                case 'channel_status':
+                    setChannelStatus(msg.channel, msg.state, msg.text);
                     break;
                 case 'stopped':
                     setStatus('idle', 'Ready');
                     setRunning(false);
-                    showProgress(false);
+                    // Keep the overlay up if it's showing an error so the
+                    // user can read it and hit Retry, instead of it
+                    // vanishing the instant the engine thread exits.
+                    if (!engineOverlay.classList.contains('error')) {
+                        hideEngineOverlay();
+                    }
+                    resetChannelStatuses();
                     stopPolling();
                     break;
             }
@@ -308,6 +502,25 @@ function setStatus(state, text) {
     statusText.textContent = text;
 }
 
+const CHANNEL_STATUS_LABELS = {
+    listening: 'Listening',
+    failed: 'Failed',
+    disabled: 'Disabled',
+    idle: 'Not started',
+};
+
+function setChannelStatus(channel, state, detail) {
+    const el = channel === 'loopback' ? lbChannelStatus : micChannelStatus;
+    el.className = 'channel-status ' + state;
+    el.querySelector('.channel-status-text').textContent = CHANNEL_STATUS_LABELS[state] || state;
+    el.title = detail || '';
+}
+
+function resetChannelStatuses() {
+    setChannelStatus('mic', 'idle');
+    setChannelStatus('loopback', 'idle');
+}
+
 function setRunning(running) {
     isRunning = running;
     if (running) {
@@ -318,13 +531,7 @@ function setRunning(running) {
         startBtn.classList.remove('running');
         startBtn.querySelector('.btn-start-icon').textContent = '▶';
         startBtn.querySelector('.btn-start-text').textContent = 'Start Translator';
-    }
-}
-
-function showProgress(visible, value) {
-    progressContainer.classList.toggle('visible', visible);
-    if (value !== undefined) {
-        progressBar.style.width = (value * 100) + '%';
+        setSettingsDirty(false);
     }
 }
 
@@ -369,6 +576,52 @@ function addTranslation(msg) {
 
     // Auto-scroll
     scroll.scrollTop = scroll.scrollHeight;
+
+    // Record for the Download Transcript button — kept in full, unlike the
+    // on-screen panels which trim to 50 items each.
+    transcriptLog.push({
+        time: new Date(),
+        channel: isLoopback ? 'Remote' : 'You',
+        srcLang: msg.src_lang,
+        tgtLang: msg.tgt_lang,
+        original: showOriginal ? msg.original : '',
+        translated: msg.translated,
+    });
+    downloadTranscriptBtn.disabled = false;
+    downloadTranscriptBtn.title = 'Download transcript';
+    transcriptCount.textContent = transcriptLog.length;
+}
+
+function downloadTranscript() {
+    if (transcriptLog.length === 0) return;
+
+    const pad = n => String(n).padStart(2, '0');
+    const fmtTime = d => `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    const fmtStamp = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+
+    const now = new Date();
+    const lines = [
+        `Voxxwire Transcript`,
+        `Generated: ${now.toLocaleString()}`,
+        '',
+    ];
+    transcriptLog.forEach(entry => {
+        lines.push(`[${fmtTime(entry.time)}] ${entry.channel} (${entry.srcLang} → ${entry.tgtLang})`);
+        if (entry.original) lines.push(`  ${entry.original}`);
+        lines.push(`  → ${entry.translated}`);
+        lines.push('');
+    });
+
+    const content = lines.join('\n');
+    const filename = `voxxwire_transcript_${fmtStamp(now)}.txt`;
+
+    pywebview.api.download_transcript(content, filename).then(saved => {
+        if (saved) {
+            appendLog('⬇ Transcript saved.\n');
+        }
+    }).catch(e => {
+        appendLog('❌ Failed to save transcript: ' + e.message + '\n');
+    });
 }
 
 function escapeHtml(text) {

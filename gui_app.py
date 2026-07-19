@@ -82,20 +82,37 @@ WHISPER_MODELS = ["tiny", "base", "small", "medium", "large-v3"]
 # HELPER: AUDIO DEVICES
 # ---------------------------------------------------------------------------
 def get_audio_devices():
-    if not _SD_AVAILABLE:
-        return [], []
+    inputs, outputs = [], []
+    if _SD_AVAILABLE:
+        try:
+            devices = sd.query_devices()
+            for idx, d in enumerate(devices):
+                name = d["name"]
+                if d["max_input_channels"] > 0:
+                    inputs.append({"index": idx, "name": f"[{idx}] {name}"})
+                if d["max_output_channels"] > 0:
+                    outputs.append({"index": idx, "name": f"[{idx}] {name}"})
+        except Exception:
+            pass
+    return inputs, outputs
+
+
+def get_loopback_devices():
+    """WASAPI loopback devices (pyaudiowpatch) — genuinely separate signal
+    path from any microphone, unlike a 'Stereo Mix'-style input device.
+    Uses its own index namespace, distinct from sounddevice's."""
     try:
-        devices = sd.query_devices()
-        inputs, outputs = [], []
-        for idx, d in enumerate(devices):
-            name = d["name"]
-            if d["max_input_channels"] > 0:
-                inputs.append({"index": idx, "name": f"[{idx}] {name}"})
-            if d["max_output_channels"] > 0:
-                outputs.append({"index": idx, "name": f"[{idx}] {name}"})
-        return inputs, outputs
+        import pyaudiowpatch as pyaudio
+        pa = pyaudio.PyAudio()
+        try:
+            return [
+                {"index": d["index"], "name": f"[{d['index']}] {d['name']}"}
+                for d in pa.get_loopback_device_info_generator()
+            ]
+        finally:
+            pa.terminate()
     except Exception:
-        return [], []
+        return []
 
 
 # ---------------------------------------------------------------------------
@@ -209,11 +226,18 @@ class Api:
         self._stop_event = threading.Event()
         self._engine_thread = None
         self._running = False
+        # Serializes start/stop/restart so two clicks in quick succession
+        # (or a Start racing a Restart) can never spin up two overlapping
+        # engine threads fighting over the same audio devices and ASR model.
+        # Reentrant because restart_engine calls stop_engine then start_engine
+        # while already holding the lock.
+        self._control_lock = threading.RLock()
 
     # ── Device / Language data ────────────────────────────────────────────
     def get_devices(self):
         inputs, outputs = get_audio_devices()
-        return {"inputs": inputs, "outputs": outputs}
+        loopbacks = get_loopback_devices()
+        return {"inputs": inputs, "outputs": outputs, "loopbacks": loopbacks}
 
     def get_languages(self):
         return [{"name": name, "code": code} for name, code in sorted(LANGUAGES.items())]
@@ -236,10 +260,11 @@ class Api:
             "loopback_channel": config.ENABLE_LOOPBACK_CHANNEL,
         }
 
-    # ── Engine control ───────────────────────────────────────────────────
-    def start_engine(self, settings):
-        """Called from JS when user clicks Start."""
-        # Apply settings to config
+    # ── Settings ──────────────────────────────────────────────────────────
+    def _apply_settings(self, settings: dict) -> dict:
+        """Apply a settings dict to the config module and return the
+        normalized dict used for persistence. Shared by save_settings,
+        start_engine and restart_engine so they can never drift apart."""
         config.MIC_DEVICE_INDEX = settings.get('mic_device')
         config.LOOPBACK_DEVICE_INDEX = settings.get('loopback_device')
         config.MIC_SOURCE_LANG = settings.get('mic_src_lang', 'en')
@@ -252,8 +277,7 @@ class Api:
         config.ENABLE_LOOPBACK_CHANNEL = settings.get('loopback_channel', True)
         config.ENABLE_TTS_OUTPUT = False
 
-        # Persist settings for next session
-        _save_user_settings({
+        return {
             "mic_device": config.MIC_DEVICE_INDEX,
             "loopback_device": config.LOOPBACK_DEVICE_INDEX,
             "mic_src_lang": config.MIC_SOURCE_LANG,
@@ -264,19 +288,61 @@ class Api:
             "subtitles": config.ENABLE_SUBTITLES,
             "mic_channel": config.ENABLE_MIC_CHANNEL,
             "loopback_channel": config.ENABLE_LOOPBACK_CHANNEL,
-        })
+        }
 
-        self._stop_event.clear()
-        self._running = True
-        self._engine_thread = threading.Thread(target=self._engine_worker, daemon=True)
-        self._engine_thread.start()
+    def save_settings(self, settings):
+        """Called from JS 'Save Configuration' button — persists settings
+        to disk without starting the engine."""
+        normalized = self._apply_settings(settings)
+        _save_user_settings(normalized)
         return True
 
-    def stop_engine(self):
-        """Called from JS when user clicks Stop."""
-        self._stop_event.set()
-        self._running = False
+    # ── Engine control ───────────────────────────────────────────────────
+    def start_engine(self, settings):
+        """Called from JS when user clicks Start."""
+        with self._control_lock:
+            if self._engine_thread and self._engine_thread.is_alive():
+                # Engine is already running (or another start/restart is
+                # mid-flight) — refuse instead of spinning up a second
+                # overlapping engine that would fight over the same audio
+                # devices and leave one pipeline pointing at a half-loaded
+                # ASR model.
+                logger.warning("start_engine called while engine already running — ignored")
+                return False
+
+            normalized = self._apply_settings(settings)
+            _save_user_settings(normalized)
+
+            self._stop_event.clear()
+            self._running = True
+            self._engine_thread = threading.Thread(target=self._engine_worker, daemon=True)
+            self._engine_thread.start()
+            return True
+
+    def stop_engine(self, wait: bool = False):
+        """Called from JS when user clicks Stop. `wait` blocks until the
+        engine thread has fully torn down (audio devices released, event
+        loop closed) — used before a restart so the new engine doesn't
+        race the old one for the same audio devices."""
+        with self._control_lock:
+            self._stop_event.set()
+            self._running = False
+            if wait and self._engine_thread and self._engine_thread.is_alive():
+                self._engine_thread.join(timeout=10.0)
         return True
+
+    def restart_engine(self, settings):
+        """Called from JS when the user changes languages/model while the
+        engine is already running. Cleanly stops the current engine (so the
+        old ASR/translation objects and audio devices are fully released),
+        then starts a fresh one with the new settings — this is what makes
+        a language change actually take effect. Holds the control lock for
+        the whole stop+start sequence so a concurrent Start/Stop click can't
+        interleave with it."""
+        with self._control_lock:
+            if self._engine_thread and self._engine_thread.is_alive():
+                self.stop_engine(wait=True)
+            return self.start_engine(settings)
 
     def poll_messages(self):
         """Called from JS every 200ms to get new messages."""
@@ -287,6 +353,31 @@ class Api:
             except Exception:
                 break
         return messages
+
+    # ── Transcript export ────────────────────────────────────────────────
+    def download_transcript(self, content: str, suggested_name: str = "voxxwire_transcript.txt"):
+        """Called from JS 'Download Transcript' button — opens a native
+        save dialog and writes the session transcript to disk."""
+        import webview
+        try:
+            window = webview.windows[0] if webview.windows else None
+            if window is None:
+                return False
+            result = window.create_file_dialog(
+                webview.SAVE_DIALOG,
+                save_filename=suggested_name,
+                file_types=('Text files (*.txt)', 'All files (*.*)'),
+            )
+            if not result:
+                return False  # user cancelled the dialog
+            path = result if isinstance(result, str) else result[0]
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write(content)
+            logger.info(f"Transcript saved to {path}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to save transcript: {e}")
+            return False
 
     # ── Engine worker (background thread) ────────────────────────────────
     def _engine_worker(self):
@@ -346,9 +437,20 @@ class Api:
                     ok = download_single_package(fc, tc, available, q)
                     if not ok:
                         q.put({"type": "log", "text": "❌ Could not install required language packs.\n"})
+                        q.put({"type": "error", "text": "Couldn't download a required language pack. Check your internet connection and try again."})
                         q.put({"type": "stopped"})
                         return
                     q.put({"type": "progress", "value": 0.50 + 0.15 * ((i + 1) / len(to_download))})
+
+                # argostranslate caches its installed-language list on first
+                # use (functools.lru_cache) and never re-scans afterwards.
+                # Without clearing it here, a pack installed mid-session
+                # stays invisible to translate_text() until the whole app
+                # is restarted — translation would silently fail for any
+                # newly-added language pair.
+                import argostranslate.translate
+                argostranslate.translate.get_installed_languages.cache_clear()
+
                 q.put({"type": "log", "text": "  All language packs ready!\n"})
             else:
                 q.put({"type": "log", "text": "  All packs already installed ✓\n"})
@@ -398,17 +500,45 @@ class Api:
             q.put({"type": "progress", "value": 0.90})
 
             # Start captures
+            mic_ok = loopback_ok = True
             if mic_capture:
                 try:
                     mic_capture.start()
+                    q.put({"type": "channel_status", "channel": "mic", "state": "listening"})
                 except Exception as e:
+                    mic_ok = False
                     q.put({"type": "log", "text": f"⚠ Mic capture failed: {e}\n"})
+                    q.put({"type": "channel_status", "channel": "mic", "state": "failed", "text": str(e)})
+            else:
+                q.put({"type": "channel_status", "channel": "mic", "state": "disabled"})
 
             if loopback_capture:
                 try:
                     loopback_capture.start()
+                    q.put({"type": "channel_status", "channel": "loopback", "state": "listening"})
                 except Exception as e:
+                    loopback_ok = False
                     q.put({"type": "log", "text": f"⚠ Loopback capture failed: {e}\n"})
+                    q.put({"type": "channel_status", "channel": "loopback", "state": "failed", "text": str(e)})
+            else:
+                q.put({"type": "channel_status", "channel": "loopback", "state": "disabled"})
+
+            # If every enabled channel failed to start, there's nothing for
+            # the engine to actually do — surface this as a real error
+            # instead of silently reporting "running" with no audio flowing.
+            enabled_but_failed = (
+                (config.ENABLE_MIC_CHANNEL and not mic_ok) or
+                (config.ENABLE_LOOPBACK_CHANNEL and not loopback_ok)
+            )
+            any_channel_working = (
+                (config.ENABLE_MIC_CHANNEL and mic_ok) or
+                (config.ENABLE_LOOPBACK_CHANNEL and loopback_ok)
+            )
+            if enabled_but_failed and not any_channel_working:
+                q.put({"type": "log", "text": "❌ No audio channel could be started.\n"})
+                q.put({"type": "error", "text": "Couldn't start any audio device. Check that your microphone/speakers are connected and not in use by another app."})
+                q.put({"type": "stopped"})
+                return
 
             # Start pipeline tasks
             tasks = [loop.create_task(p.run()) for p in pipelines]
@@ -426,6 +556,13 @@ class Api:
                 p.stop()
             for t in tasks:
                 t.cancel()
+            # Let the cancellations actually propagate before closing the
+            # loop — otherwise pending tasks get destroyed mid-flight
+            # ("Task was destroyed but it is pending!") instead of exiting
+            # cleanly, which is what let a stale pipeline linger past the
+            # point stop_engine() considered the engine fully stopped.
+            if tasks:
+                loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
 
             if mic_capture:
                 mic_capture.stop()
@@ -440,6 +577,7 @@ class Api:
         except Exception as e:
             logger.error(f"Engine error: {e}", exc_info=True)
             q.put({"type": "log", "text": f"❌ Engine error: {e}\n"})
+            q.put({"type": "error", "text": f"Engine failed to start: {e}"})
             q.put({"type": "stopped"})
         finally:
             self._running = False

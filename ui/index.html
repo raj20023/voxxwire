@@ -40,7 +40,7 @@
                 </svg>
             </div>
             <span class="app-title">Voxxwire</span>
-            <span class="app-version">v1.2</span>
+            <span class="app-version">v1.4.0</span>
         </div>
         <div class="titlebar-center">
             <div class="status-indicator" id="statusIndicator">
@@ -72,6 +72,11 @@
         <!-- ─── LEFT PANEL: Settings ─── -->
         <aside class="panel panel-settings" id="settingsPanel">
             <div class="panel-scroll">
+
+                <!-- Save Configuration -->
+                <button class="btn-save" id="saveBtn" disabled title="Save configuration">
+                    💾 Save Configuration
+                </button>
 
                 <!-- Audio Devices (Auto-Detect) -->
                 <section class="settings-section">
@@ -228,7 +233,13 @@
                 <!-- LEFT: You (Mic) -->
                 <div class="output-half output-half-mic">
                     <div class="output-header">
-                        <h3>🎙️ You</h3>
+                        <div class="output-header-left">
+                            <h3>🎙️ You</h3>
+                            <span class="channel-status idle" id="micChannelStatus">
+                                <span class="channel-status-dot"></span>
+                                <span class="channel-status-text">Not started</span>
+                            </span>
+                        </div>
                         <button class="btn-icon" id="clearMicBtn" title="Clear">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -266,7 +277,13 @@
                 <!-- RIGHT: Remote (Loopback) -->
                 <div class="output-half output-half-lb">
                     <div class="output-header">
-                        <h3>🔊 Remote</h3>
+                        <div class="output-header-left">
+                            <h3>🔊 Remote</h3>
+                            <span class="channel-status idle" id="lbChannelStatus">
+                                <span class="channel-status-dot"></span>
+                                <span class="channel-status-text">Not started</span>
+                            </span>
+                        </div>
                         <button class="btn-icon" id="clearLbBtn" title="Clear">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -315,13 +332,18 @@
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
+            <!-- Restart-to-apply banner (shown when settings change while running) -->
+            <div class="restart-banner" id="restartBanner">
+                <span class="restart-banner-text">⚠ Settings changed — restart to apply</span>
+                <button class="btn-restart" id="restartBtn">🔄 Restart &amp; Apply</button>
             </div>
 
             <!-- Control Bar -->
             <div class="control-bar">
+                <button class="btn-download" id="downloadTranscriptBtn" disabled title="No transcript yet — start translating first">
+                    ⬇ Transcript
+                    <span class="transcript-count" id="transcriptCount">0</span>
+                </button>
                 <button class="btn-start" id="startBtn">
                     <span class="btn-start-icon">▶</span>
                     <span class="btn-start-text">Start Translator</span>
@@ -329,6 +351,28 @@
             </div>
         </section>
     </main>
+
+    <!-- ═══ ENGINE LOADING / ERROR OVERLAY ═══ -->
+    <div class="engine-overlay" id="engineOverlay">
+        <div class="engine-overlay-card">
+            <div class="engine-overlay-spinner" id="engineOverlaySpinner">
+                <svg class="spinner-svg" viewBox="0 0 44 44">
+                    <circle class="spinner-track" cx="22" cy="22" r="18"></circle>
+                    <circle class="spinner-arc" cx="22" cy="22" r="18"></circle>
+                </svg>
+            </div>
+            <div class="engine-overlay-icon-error" id="engineOverlayErrorIcon">⚠</div>
+            <h3 class="engine-overlay-title" id="engineOverlayTitle">Starting translator…</h3>
+            <p class="engine-overlay-message" id="engineOverlayMessage">Warming things up…</p>
+            <div class="engine-overlay-progress" id="engineOverlayProgress">
+                <div class="engine-overlay-progress-bar" id="engineOverlayProgressBar"></div>
+            </div>
+            <div class="engine-overlay-actions">
+                <button class="btn-overlay-secondary" id="engineOverlayCancelBtn">Cancel</button>
+                <button class="btn-overlay-primary hidden" id="engineOverlayRetryBtn">🔄 Retry</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ═══ FOOTER ═══ -->
     <footer class="app-footer">

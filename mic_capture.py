@@ -67,15 +67,28 @@ class MicCapture:
 
         self._running = True
 
+        # 'high' latency asks PortAudio for a bigger host buffer, which
+        # gives the OS scheduler more slack before a "input overflow" (lost
+        # audio) is reported when this thread gets briefly starved by
+        # ASR/VAD CPU load. never_drop_input goes further — it tells
+        # PortAudio to buffer through a starvation instead of dropping —
+        # but it's only honored by some host APIs, so fall back without it.
+        base_kwargs = dict(
+            device=self.device_index,
+            samplerate=self.sample_rate,
+            channels=self.channels,
+            dtype="float32",
+            blocksize=self.block_size,
+            latency="high",
+            callback=self._audio_callback,
+        )
+
         try:
-            self.stream = sd.InputStream(
-                device=self.device_index,
-                samplerate=self.sample_rate,
-                channels=self.channels,
-                dtype="float32",
-                blocksize=self.block_size,
-                callback=self._audio_callback,
-            )
+            self.stream = sd.InputStream(never_drop_input=True, **base_kwargs)
+        except Exception:
+            self.stream = sd.InputStream(**base_kwargs)
+
+        try:
             self.stream.start()
             logger.info("Mic capture started successfully")
         except Exception as e:
