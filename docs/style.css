@@ -1703,3 +1703,22 @@ section h2 {
         min-width: 0;
     }
 }
+
+/* ── AdSense Container ─────────────────────────────────────────────────── */
+.ad-section {
+    padding: 30px 20px;
+    margin: 40px auto;
+    max-width: 1100px;
+    text-align: center;
+}
+
+.ad-label {
+    display: inline-block;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
