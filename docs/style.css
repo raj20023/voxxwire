@@ -1977,5 +1977,18 @@ section h2 {
     box-shadow: 5px 5px 0 var(--border);
 }
 
+.support-ad-card {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.support-ad-unit {
+    margin-top: 16px;
+    min-height: 120px;
+}
+
+
 
 
