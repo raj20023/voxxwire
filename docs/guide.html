@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Comprehensive User Guide for Voxxwire — Setup WASAPI loopback, Whisper model selection, audio pipeline configuration, and troubleshooting guide.">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/guide.html">
+    <title>User Guide & Documentation — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-3331266051749440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3331266051749440"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html" class="active">User Guide</a>
+                <a href="about.html">About</a>
+                <a href="releases.html">Releases</a>
+                <a href="index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ PAGE CONTENT ═══════════ -->
+    <main class="page-container">
+        <div class="page-header">
+            <span class="section-badge">Documentation</span>
+            <h1>User Guide & <span class="accent-text">Knowledge Base</span></h1>
+            <p class="page-subtitle">Master real-time offline translation on Windows — complete setup, audio routing, and model benchmarks.</p>
+        </div>
+
+        <article class="content-body guide-body">
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#quick-start">1. Quick Start & Installation</a></li>
+                    <li><a href="#audio-setup">2. Audio Device Setup (Microphone & System Loopback)</a></li>
+                    <li><a href="#whisper-models">3. Whisper ASR Model Benchmarks & Selection</a></li>
+                    <li><a href="#offline-translation">4. Offline Translation & Language Model Setup</a></li>
+                    <li><a href="#feedback-prevention">5. Acoustic Feedback Prevention & Timing Gate</a></li>
+                    <li><a href="#troubleshooting">6. Troubleshooting Common Issues</a></li>
+                </ul>
+            </div>
+
+            <!-- AdSense Ad Slot Top -->
+            <div class="ad-section">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3331266051749440"
+                    data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <section id="quick-start" class="guide-section">
+                <h2>1. Quick Start & Installation</h2>
+                <p>Voxxwire is designed to deliver sub-second, 100% offline speech-to-speech translation directly on Windows 10 and Windows 11 64-bit systems. Follow these steps to get started:</p>
+                <ol>
+                    <li>Download the standalone installer (`Voxxwire-Setup.exe`) from the <a href="index.html#download">Download Page</a> or <a href="releases.html">Releases Changelog</a>.</li>
+                    <li>Run the setup executable. If Windows SmartScreen displays a warning, click <strong>"More info"</strong> and select <strong>"Run anyway"</strong>.</li>
+                    <li>Launch Voxxwire from your Desktop shortcut or Start Menu.</li>
+                    <li>On first launch, Voxxwire will automatically scan your system's input and output audio hardware.</li>
+                </ol>
+            </section>
+
+            <section id="audio-setup" class="guide-section">
+                <h2>2. Audio Device Setup (Microphone & System Loopback)</h2>
+                <p>Voxxwire features a dual-channel audio architecture designed specifically for online meetings (Zoom, Google Meet, Microsoft Teams, Discord, or Skype):</p>
+
+                <div class="card-grid-2">
+                    <div class="info-card">
+                        <h3>🎙️ Microphone Channel (You)</h3>
+                        <p>Captures your spoken voice through your physical headset or microphone. The audio is filtered through Silero Voice Activity Detection (VAD) and converted to translated text and spoken audio for remote listeners.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔊 System Audio Channel (Remote)</h3>
+                        <p>Captures what remote participants are saying by intercepting your Windows WASAPI audio output loopback (Stereo Mix / Loopback). This allows Voxxwire to translate their incoming speech into your preferred language in real time.</p>
+                    </div>
+                </div>
+
+                <h3>Automatic Headset & Device Detection</h3>
+                <p>Voxxwire automatically identifies active Bluetooth headsets, USB microphones, and default Windows playback devices. If you use external audio interfaces or virtual cables (like VB-Audio Cable), you can manually select input channels from the Settings panel.</p>
+            </section>
+
+            <section id="whisper-models" class="guide-section">
+                <h2>3. Whisper ASR Model Benchmarks & Selection</h2>
+                <p>Voxxwire uses OpenAI's Whisper model via <code>faster-whisper</code> (CTranslate2 execution engine) for high-accuracy local speech recognition. Choose the model size based on your hardware capabilities:</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Model Size</th>
+                            <th>VRAM / RAM</th>
+                            <th>Relative Speed</th>
+                            <th>Transcription Accuracy</th>
+                            <th>Recommended For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tiny</strong></td>
+                            <td>~1.0 GB</td>
+                            <td>⚡⚡⚡ (3x Real-Time)</td>
+                            <td>Good (Clear Audio)</td>
+                            <td>Older CPUs / Basic Laptops</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base</strong></td>
+                            <td>~1.5 GB</td>
+                            <td>⚡⚡ (2x Real-Time)</td>
+                            <td>Great</td>
+                            <td>Standard Desktop / Quad-Core CPU</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Small (Default)</strong></td>
+                            <td>~2.5 GB</td>
+                            <td>⚡ (Real-Time)</td>
+                            <td>Excellent</td>
+                            <td>Recommended for standard meetings</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Medium</strong></td>
+                            <td>~5.0 GB</td>
+                            <td>0.7x Real-Time (CPU)</td>
+                            <td>Near-Human</td>
+                            <td>Requires NVIDIA GPU (CUDA)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Large-v3</strong></td>
+                            <td>~8.0 GB</td>
+                            <td>Requires GPU</td>
+                            <td>State-of-the-Art</td>
+                            <td>NVIDIA RTX GPUs (6GB+ VRAM)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="offline-translation" class="guide-section">
+                <h2>4. Offline Translation & Language Model Setup</h2>
+                <p>Voxxwire translates text using <strong>Argos Translate</strong>, an open-source neural machine translation engine that runs offline on OpenNMT-py models. Over 49+ language pairs are supported, including English, Spanish, French, German, Japanese, Hindi, Mandarin Chinese, Russian, Italian, Portuguese, and Korean.</p>
+                <p>When you select a new language pair for the first time, Voxxwire downloads the lightweight offline translation package (~30MB) once. After initial setup, all translation calculations execute 100% locally on your CPU.</p>
+            </section>
+
+            <!-- AdSense Ad Slot Middle -->
+            <div class="ad-section">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3331266051749440"
+                    data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <section id="feedback-prevention" class="guide-section">
+                <h2>5. Acoustic Feedback Prevention & Timing Gate</h2>
+                <p>A common challenge in real-time desktop translators is <strong>acoustic feedback loops</strong> — where translated spoken output (TTS) played through system speakers gets re-captured by the loopback channel and translated back to you!</p>
+                <p>Voxxwire solves this with an intelligent <strong>Timing Gate</strong>. When Voxxwire plays translated TTS audio, the system loopback capture stream is temporarily suppressed for the exact duration of the playback plus a 200ms buffer, preventing self-reinforcing audio loops.</p>
+            </section>
+
+            <section id="troubleshooting" class="guide-section">
+                <h2>6. Troubleshooting Common Issues</h2>
+                <div class="faq-list">
+                    <details class="faq-item" open>
+                        <summary>No audio is being transcribed or translated?<span class="faq-chevron"></span></summary>
+                        <div class="faq-answer">
+                            <p>Verify that the correct Microphone and System Audio devices are selected in the left settings panel. Ensure your microphone is unmuted in Windows Settings and that Voxxwire has permission to access your audio input.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Audio transcription feels laggy or delayed?<span class="faq-chevron"></span></summary>
+                        <div class="faq-answer">
+                            <p>If running on CPU, switch the Whisper Model size from <strong>Small</strong> to <strong>Base</strong> or <strong>Tiny</strong> in the ASR Model settings section. This drastically reduces CPU load and latency.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How to use Voxxwire with Headphones?<span class="faq-chevron"></span></summary>
+                        <div class="faq-answer">
+                            <p>Connect your headphones before launching Voxxwire. Voxxwire auto-detects headset devices and routes system audio loopback seamlessly.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="about.html">About Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="releases.html">Releases</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

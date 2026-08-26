@@ -1722,3 +1722,165 @@ section h2 {
     margin-bottom: 12px;
 }
 
+/* ── Content Pages Layout ─────────────────────────────────────────────── */
+.page-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 120px 24px 80px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.page-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-weight: 800;
+    margin: 16px 0 12px;
+    color: var(--ink);
+}
+
+.page-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.content-body {
+    background: var(--surface);
+    border: 3px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 40px;
+    box-shadow: var(--shadow-lg);
+}
+
+.policy-section,
+.guide-section {
+    margin-bottom: 40px;
+}
+
+.policy-section:last-child,
+.guide-section:last-child {
+    margin-bottom: 0;
+}
+
+.content-body h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--ink);
+}
+
+.content-body h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 24px 0 12px;
+    color: var(--ink);
+}
+
+.content-body p {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.7;
+}
+
+.content-body ul,
+.content-body ol {
+    margin: 0 0 20px 24px;
+    color: var(--text);
+}
+
+.content-body li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.content-body a {
+    color: var(--accent-dark);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* TOC Box */
+.toc-box {
+    background: var(--mustard-soft);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-sm);
+}
+
+.toc-box h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 1.1rem;
+}
+
+.toc-box ul {
+    margin-bottom: 0;
+}
+
+/* Card Grid */
+.card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+}
+
+.info-card {
+    background: var(--bg-soft);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+.info-card h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+}
+
+.info-card p {
+    font-size: .92rem;
+    margin-bottom: 0;
+}
+
+/* Data Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.data-table th,
+.data-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.data-table th {
+    background: var(--mustard);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="About Voxxwire — Learn about our mission for 100% offline, privacy-first AI speech translation and our open-source software architecture.">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/about.html">
+    <title>About Us — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-3331266051749440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3331266051749440"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="about.html" class="active">About</a>
+                <a href="releases.html">Releases</a>
+                <a href="index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ PAGE CONTENT ═══════════ -->
+    <main class="page-container">
+        <div class="page-header">
+            <span class="section-badge">Our Mission</span>
+            <h1>About <span class="accent-text">Voxxwire</span></h1>
+            <p class="page-subtitle">Pioneering offline, zero-telemetry, privacy-first artificial intelligence for global communication.</p>
+        </div>
+
+        <article class="content-body">
+            <section class="policy-section">
+                <h2>Why Voxxwire Was Built</h2>
+                <p>In an era where voice data and confidential meeting conversations are routinely uploaded to third-party cloud servers for speech processing, Voxxwire was created with a fundamental mission: <strong>Complete Privacy Through Offline AI</strong>.</p>
+                <p>Whether you are hosting sensitive business calls, confidential medical consultations, legal discussions, or personal conversations, Voxxwire ensures that your voice and translated dialogue never leave your personal computer.</p>
+            </section>
+
+            <!-- AdSense Ad Slot Top -->
+            <div class="ad-section">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3331266051749440"
+                    data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <section class="policy-section">
+                <h2>System Architecture</h2>
+                <p>Voxxwire combines state-of-the-art open-source machine learning models into a streamlined local execution pipeline:</p>
+
+                <div class="card-grid-2">
+                    <div class="info-card">
+                        <h3>1. Voice Activity Detection (Silero VAD)</h3>
+                        <p>Filters background noise and acoustic silence in real time, detecting human speech boundaries to optimize CPU performance.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>2. Automatic Speech Recognition (Whisper)</h3>
+                        <p>Powered by CTranslate2 (faster-whisper), delivering near-instant transcription accuracy across 49+ languages on both CPU and CUDA-enabled NVIDIA GPUs.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>3. Neural Machine Translation (Argos)</h3>
+                        <p>Executes sentence translation using local OpenNMT neural models with zero API dependencies.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>4. Neural Speech Synthesis (Piper TTS)</h3>
+                        <p>Generates natural-sounding voice output locally to speak translations aloud in real time.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="policy-section">
+                <h2>Open Source & Community Driven</h2>
+                <p>Voxxwire is created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong> as a fully open-source software project. The code, build scripts, and design files are transparently maintained on <a href="https://github.com/raj20023/voxxwire" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+            </section>
+        </article>
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="about.html">About Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="releases.html">Releases</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
