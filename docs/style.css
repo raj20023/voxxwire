@@ -1971,23 +1971,69 @@ section h2 {
     transition: all .2s ease;
 }
 
-.btn-support-outline:hover {
-    background: var(--mustard-soft);
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0 var(--border);
+.support-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 800px;
+    margin: 24px auto 0;
+}
+
+.support-card-wide {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    padding: 28px 36px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.support-header-inline {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    min-width: 260px;
+}
+
+.support-header-inline .support-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0;
+}
+
+.support-text-wrap h3 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--ink);
+}
+
+.support-text-wrap p {
+    font-size: .95rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
 }
 
 .support-ad-card {
-    min-height: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: block;
+    text-align: center;
+    padding: 24px 28px;
+}
+
+.ad-subtext {
+    font-size: .85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
 }
 
 .support-ad-unit {
-    margin-top: 16px;
-    min-height: 120px;
+    margin-top: 10px;
+    min-height: 100px;
 }
+
 
 
 
