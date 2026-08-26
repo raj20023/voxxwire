@@ -1883,4 +1883,99 @@ section h2 {
     border-bottom: none;
 }
 
+/* ── Support & Donation Section ───────────────────────────────────────── */
+.support-section {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.support-desc {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 680px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+}
+
+.support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.support-card {
+    background: var(--surface);
+    border: 3px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.support-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.support-icon {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+}
+
+.support-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
+}
+
+.support-card p {
+    font-size: .95rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.btn-support {
+    background: #ffdd00;
+    color: #000000;
+    border: 2px solid var(--border);
+    font-size: .95rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 3px 3px 0 var(--border);
+    display: inline-block;
+    transition: all .2s ease;
+}
+
+.btn-support:hover {
+    background: #facc15;
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--border);
+}
+
+.btn-support-outline {
+    background: var(--surface);
+    color: var(--ink);
+    border: 2px solid var(--border);
+    font-size: .95rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 3px 3px 0 var(--border);
+    display: inline-block;
+    transition: all .2s ease;
+}
+
+.btn-support-outline:hover {
+    background: var(--mustard-soft);
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--border);
+}
+
+
 
