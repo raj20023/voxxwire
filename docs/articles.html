@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Technical articles, architecture guides, benchmarks, and tutorials on offline speech translation, local AI models, and real-time audio pipelines by Voxxwire.">
+    <meta name="keywords"
+        content="offline speech translation articles, Whisper performance benchmarks, local AI privacy, WASAPI audio loopback, Argos translate, Piper TTS">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/articles.html">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Voxxwire — Articles & Technical Guides">
+    <meta property="og:description"
+        content="Deep dives into offline AI translation, Whisper ASR benchmarks, WASAPI audio routing, and privacy-first local speech tools.">
+    <meta property="og:url" content="https://voxxwire.com/articles.html">
+    <meta property="og:type" content="website">
+    <title>Articles & Technical Guides — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.2.0">
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-3331266051749440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3331266051749440"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="articles.html" class="active">Articles</a>
+                <a href="about.html">About</a>
+                <a href="releases.html">Releases</a>
+                <a href="index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header class="page-header">
+        <div class="header-inner">
+            <span class="section-badge">Knowledge Base & AI Engineering</span>
+            <h1>Articles & <span class="accent-text">Technical Guides</span></h1>
+            <p class="lead">Explore in-depth technical guides, Whisper benchmarks, audio pipeline tutorials, and privacy analysis for local offline speech processing.</p>
+        </div>
+    </header>
+
+    <!-- ═══════════ ARTICLES GRID ═══════════ -->
+    <main class="page-main">
+        <div class="section-inner" style="max-width: 1100px;">
+            <div class="articles-grid">
+
+                <!-- Article 1 -->
+                <article class="article-card">
+                    <div>
+                        <span class="article-tag">ARCHITECTURE</span>
+                        <h3><a href="articles/how-offline-speech-translation-works.html">How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate</a></h3>
+                        <p class="article-excerpt">A technical deep dive into building an end-to-end local speech recognition and translation pipeline without cloud dependencies or API keys.</p>
+                    </div>
+                    <div class="article-meta">
+                        <span>Sept 5, 2026</span>
+                        <span>8 min read</span>
+                    </div>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="article-card">
+                    <div>
+                        <span class="article-tag">PRIVACY & SECURITY</span>
+                        <h3><a href="articles/local-vs-cloud-speech-translation.html">Local vs Cloud Speech Translation: Why Privacy Matters in Confidential Meetings</a></h3>
+                        <p class="article-excerpt">Analyzing data sovereignty, zero-cloud architecture, latency, and compliance benefits of running speech models directly on client hardware.</p>
+                    </div>
+                    <div class="article-meta">
+                        <span>Aug 28, 2026</span>
+                        <span>6 min read</span>
+                    </div>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="article-card">
+                    <div>
+                        <span class="article-tag">TUTORIAL</span>
+                        <h3><a href="articles/setup-realtime-translation-zoom-teams.html">How to Setup Real-Time Subtitles & Audio Translation for Zoom & Microsoft Teams</a></h3>
+                        <p class="article-excerpt">Step-by-step guide to configuring Windows WASAPI audio loopback and dual-channel microphone capture for seamless online meeting translations.</p>
+                    </div>
+                    <div class="article-meta">
+                        <span>Aug 14, 2026</span>
+                        <span>10 min read</span>
+                    </div>
+                </article>
+
+                <!-- Article 4 -->
+                <article class="article-card">
+                    <div>
+                        <span class="article-tag">BENCHMARKS</span>
+                        <h3><a href="articles/whisper-model-performance-benchmarks.html">OpenAI Whisper Model Benchmarks: CPU vs GPU Latency & Memory Footprint</a></h3>
+                        <p class="article-excerpt">Comprehensive latency and RAM comparison between Whisper Tiny, Base, Small, and Medium models across Intel Core, AMD Ryzen, and NVIDIA CUDA GPUs.</p>
+                    </div>
+                    <div class="article-meta">
+                        <span>Jul 30, 2026</span>
+                        <span>7 min read</span>
+                    </div>
+                </article>
+
+                <!-- Article 5 -->
+                <article class="article-card">
+                    <div>
+                        <span class="article-tag">ROUNDUP</span>
+                        <h3><a href="articles/best-free-offline-translation-tools-windows.html">Top 5 Free & Open-Source Offline Translation Tools for Windows (2026 Edition)</a></h3>
+                        <p class="article-excerpt">A comparative review of open-source desktop software for offline text and voice translation, evaluating privacy, accuracy, and ease of setup.</p>
+                    </div>
+                    <div class="article-meta">
+                        <span>Jul 18, 2026</span>
+                        <span>9 min read</span>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Ad Unit -->
+            <div style="margin-top: 50px; text-align: center;">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3331266051749440"
+                     data-ad-slot="auto"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="articles.html">Articles</a>
+                <a href="about.html">About Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="releases.html">Releases</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Step-by-step tutorial on setting up Voxxwire for live speech translation and dual-channel subtitles in Zoom, Microsoft Teams, and Google Meet.">
+    <meta name="keywords"
+        content="Zoom meeting translation, Teams live subtitles, WASAPI audio loopback Windows, Voxxwire setup guide, real-time meeting translator">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/articles/setup-realtime-translation-zoom-teams.html">
+    <title>How to Setup Real-Time Translation for Zoom & Teams — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css?v=1.2.0">
+    <meta name="google-adsense-account" content="ca-pub-3331266051749440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3331266051749440"
+        crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "How to Setup Real-Time Subtitles & Audio Translation for Zoom & Microsoft Teams",
+      "description": "Step-by-step tutorial for online meeting translation using Voxxwire.",
+      "author": {
+        "@type": "Person",
+        "name": "Jay Parmar, Raj Prajapati"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Voxxwire"
+      },
+      "datePublished": "2026-08-14"
+    }
+    </script>
+</head>
+
+<body>
+
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="../index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="../index.html#features">Features</a>
+                <a href="../guide.html">User Guide</a>
+                <a href="../articles.html" class="active">Articles</a>
+                <a href="../about.html">About</a>
+                <a href="../releases.html">Releases</a>
+                <a href="../index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <header class="article-header">
+            <span class="article-tag">TUTORIAL</span>
+            <h1>How to Setup Real-Time Subtitles & Audio Translation for Zoom & Microsoft Teams</h1>
+            <div class="article-header-meta">
+                <span>By Jay Parmar & Raj Prajapati</span>
+                <span>•</span>
+                <span>Published Aug 14, 2026</span>
+                <span>•</span>
+                <span>10 min read</span>
+            </div>
+        </header>
+
+        <main class="article-content">
+            <div class="toc-box">
+                <h4>Table of Contents</h4>
+                <ul>
+                    <li><a href="#prereq">1. System Prerequisites</a></li>
+                    <li><a href="#install">2. Installation & Language Pack Download</a></li>
+                    <li><a href="#wasapi">3. Configuring Audio Devices (Mic & System Output)</a></li>
+                    <li><a href="#zoom">4. Connecting Voxxwire to Zoom & Microsoft Teams</a></li>
+                    <li><a href="#troubleshoot">5. Troubleshooting Audio Loopback & Performance</a></li>
+                </ul>
+            </div>
+
+            <h2 id="prereq">1. System Prerequisites</h2>
+            <p>Before initiating real-time speech translation during live online meetings, ensure your workstation meets the following hardware and software requirements:</p>
+            <ul>
+                <li><strong>OS:</strong> Windows 10 or Windows 11 (64-bit).</li>
+                <li><strong>RAM:</strong> 8 GB minimum (16 GB recommended for seamless multitasking during video calls).</li>
+                <li><strong>Audio Interface:</strong> Standard built-in soundcard supporting Windows Audio Session API (WASAPI).</li>
+                <li><strong>Storage:</strong> ~850 MB free disk space for local AI model files.</li>
+            </ul>
+
+            <h2 id="install">2. Installation & Language Pack Download</h2>
+            <p>Download the latest standalone executable setup file from <a href="https://voxxwire.com/#download">Voxxwire's official download page</a>. Run <code>Voxxwire-Setup.exe</code> and follow the wizard.</p>
+            <p>Upon launching Voxxwire for the first time:</p>
+            <ol>
+                <li>Select your <strong>Source Language</strong> (e.g. Japanese, German, Spanish) and <strong>Target Language</strong> (e.g. English).</li>
+                <li>Choose your preferred Whisper ASR model size (e.g. <code>base</code> or <code>small</code>).</li>
+                <li>Click <strong>Download Language Pack</strong>. The app will fetch the corresponding offline translation pair once. Subsequent launches require zero internet access.</li>
+            </ol>
+
+            <!-- Ad Unit -->
+            <div style="margin: 35px 0; text-align: center;">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3331266051749440"
+                     data-ad-slot="auto"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+            <h2 id="wasapi">3. Configuring Audio Devices (Mic & System Output)</h2>
+            <p>Voxxwire uses dual-channel audio capture. Channel 1 captures your local microphone (your voice), while Channel 2 captures WASAPI system audio loopback (the remote speakers in Zoom or Teams).</p>
+
+            <pre><code># Device Selection Matrix
+Local Microphone  --> Input Channel 1 (Your Speech)  --> Whisper ASR --> Translation
+System Loopback   --> Input Channel 2 (Remote Speech) --> Whisper ASR --> Translation</code></pre>
+
+            <p>In the Voxxwire main control panel:</p>
+            <ul>
+                <li>Set <strong>Microphone Input:</strong> Choose your default physical mic (e.g. <em>Realtek High Definition Audio</em> or USB Headset).</li>
+                <li>Set <strong>System Audio Input:</strong> Select <em>Default System Output (WASAPI Loopback)</em>.</li>
+            </ul>
+
+            <h2 id="zoom">4. Connecting Voxxwire to Zoom & Microsoft Teams</h2>
+            <p>Because Voxxwire captures system audio at the OS driver layer, no Zoom app plugins or custom Teams permissions are required!</p>
+            <ol>
+                <li>Start your meeting in Zoom, Microsoft Teams, or Google Meet as usual.</li>
+                <li>Position the Voxxwire window alongside or overlaying your meeting window.</li>
+                <li>Click <strong>Start Listening</strong> in Voxxwire.</li>
+                <li>As participants speak in the foreign language, real-time dual-line subtitles appear instantly on screen showing the original transcript and English translation side-by-side.</li>
+            </ol>
+
+            <h2 id="troubleshoot">5. Troubleshooting Audio Loopback & Performance</h2>
+            <p>If subtitles do not appear when remote participants speak:</p>
+            <ul>
+                <li>Verify that your headset or speakers are set as the <strong>Default Communications Device</strong> in Windows Sound Control Panel.</li>
+                <li>Ensure WASAPI loopback isn't muted in Windows Volume Mixer.</li>
+                <li>If using high-CPU video effects in Zoom, lower the Whisper model setting in Voxxwire from <code>small</code> to <code>base</code> or <code>tiny</code> to reduce processing load.</li>
+            </ul>
+
+            <div class="author-box">
+                <div class="author-avatar">🎥</div>
+                <div class="author-info">
+                    <h4>Written by Jay Parmar & Raj Prajapati</h4>
+                    <p>Core maintainers of Voxxwire — dedicated to building privacy-first, open-source offline AI desktop applications.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#features">Features</a>
+                <a href="../guide.html">User Guide</a>
+                <a href="../articles.html">Articles</a>
+                <a href="../about.html">About Us</a>
+                <a href="../privacy.html">Privacy Policy</a>
+                <a href="../terms.html">Terms of Service</a>
+                <a href="../releases.html">Releases</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

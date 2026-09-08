@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Technical deep dive into building an offline speech translation pipeline using OpenAI Whisper, Silero VAD, Argos Translate, and Piper TTS on Windows.">
+    <meta name="keywords"
+        content="offline speech translation architecture, Whisper ASR, Silero VAD, Argos Translate, Piper TTS, local speech recognition">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/articles/how-offline-speech-translation-works.html">
+    <title>How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css?v=1.2.0">
+    <meta name="google-adsense-account" content="ca-pub-3331266051749440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3331266051749440"
+        crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate",
+      "description": "Technical analysis of low-latency offline speech recognition and translation pipelines.",
+      "author": {
+        "@type": "Person",
+        "name": "Jay Parmar, Raj Prajapati"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Voxxwire"
+      },
+      "datePublished": "2026-09-05"
+    }
+    </script>
+</head>
+
+<body>
+
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="../index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="../index.html#features">Features</a>
+                <a href="../guide.html">User Guide</a>
+                <a href="../articles.html" class="active">Articles</a>
+                <a href="../about.html">About</a>
+                <a href="../releases.html">Releases</a>
+                <a href="../index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <header class="article-header">
+            <span class="article-tag">ARCHITECTURE</span>
+            <h1>How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate</h1>
+            <div class="article-header-meta">
+                <span>By Jay Parmar & Raj Prajapati</span>
+                <span>•</span>
+                <span>Published Sept 5, 2026</span>
+                <span>•</span>
+                <span>8 min read</span>
+            </div>
+        </header>
+
+        <main class="article-content">
+            <div class="toc-box">
+                <h4>Table of Contents</h4>
+                <ul>
+                    <li><a href="#overview">1. Architectural Overview</a></li>
+                    <li><a href="#vad">2. Voice Activity Detection (Silero VAD)</a></li>
+                    <li><a href="#asr">3. Automatic Speech Recognition (faster-whisper)</a></li>
+                    <li><a href="#translation">4. Neural Machine Translation (Argos Translate)</a></li>
+                    <li><a href="#tts">5. Text-to-Speech Output (Piper TTS)</a></li>
+                    <li><a href="#conclusion">6. Conclusion & Best Practices</a></li>
+                </ul>
+            </div>
+
+            <h2 id="overview">1. Architectural Overview</h2>
+            <p>Real-time speech translation software traditionally relies on cloud APIs such as Google Cloud Speech-to-Text, DeepL Translate, or Microsoft Azure Cognitive Services. While effective, cloud pipelines introduce mandatory network latency, recurring API subscription costs, and severe data privacy risks when processing sensitive corporate meetings or medical disclosures.</p>
+            <p>To overcome these challenges, <strong>Voxxwire</strong> implements a 100% offline, modular machine learning pipeline executing entirely on local CPU/GPU hardware. The system coordinates four discrete neural model engines in real time:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pipeline Stage</th>
+                        <th>Neural Engine</th>
+                        <th>Function</th>
+                        <th>Latency Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Audio Segmentation</td>
+                        <td>Silero VAD v4</td>
+                        <td>Detects speech boundaries & filters silence</td>
+                        <td>&lt; 30 ms</td>
+                    </tr>
+                    <tr>
+                        <td>Speech Recognition</td>
+                        <td>faster-whisper (CTranslate2)</td>
+                        <td>Converts spoken audio into source language text</td>
+                        <td>200 - 450 ms</td>
+                    </tr>
+                    <tr>
+                        <td>Translation</td>
+                        <td>Argos Translate (OpenNMT)</td>
+                        <td>Translates source text into target language</td>
+                        <td>40 - 120 ms</td>
+                    </tr>
+                    <tr>
+                        <td>Voice Synthesis</td>
+                        <td>Piper TTS (ONNX)</td>
+                        <td>Generates translated voice output audio</td>
+                        <td>80 - 180 ms</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="vad">2. Voice Activity Detection (Silero VAD)</h2>
+            <p>Feed-forwarding raw continuous 16kHz PCM audio streams into a transformer ASR model like Whisper consumes excessive computational resources. Passing silent audio blocks or background room noise causes hallucination artifacts in transformer decoders.</p>
+            <p>To prevent this, Voxxwire routes incoming WASAPI loopback and PyAudio streams into <strong>Silero VAD</strong>, a lightweight enterprise-grade Voice Activity Detector built on PyTorch/ONNX Runtime. Silero operates on 30ms audio chunks (480 samples at 16kHz) and calculates a probability score $P(\text{speech})$.</p>
+
+            <pre><code># Sample Silero VAD Chunk Processing Loop
+import torch
+
+model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad', model='silero_vad')
+(get_speech_timestamps, _, read_audio, *_ ) = utils
+
+def process_audio_chunk(audio_chunk, sample_rate=16000):
+    speech_prob = model(torch.from_numpy(audio_chunk), sample_rate).item()
+    if speech_prob > 0.5:
+        # Buffer active speech frames for Whisper processing
+        speech_buffer.append(audio_chunk)
+    else:
+        # Trigger speech segmentation if silence exceeds 400ms
+        flush_buffer_if_silent()</code></pre>
+
+            <!-- Ad Unit -->
+            <div style="margin: 35px 0; text-align: center;">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3331266051749440"
+                     data-ad-slot="auto"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+            <h2 id="asr">3. Automatic Speech Recognition (faster-whisper)</h2>
+            <p>Once Silero VAD detects an utterance boundary, the buffered PCM float32 array is passed to <strong>faster-whisper</strong>, an optimized reimplementation of OpenAI's Whisper model utilizing CTranslate2. CTranslate2 provides INT8 quantization and CUDA/AVX-512 vectorization, resulting in up to 4x execution speed improvement compared to vanilla PyTorch implementations.</p>
+            <p>Whisper processes log-mel spectrograms computed from 80-channel STFT windows. By constraining decoding beam search to <code>beam_size=1</code> and setting <code>patience=1.0</code>, Voxxwire achieves sub-500ms transcription latency without compromising word error rate (WER).</p>
+
+            <h2 id="translation">4. Neural Machine Translation (Argos Translate)</h2>
+            <p>The transcribed source text is immediately passed to <strong>Argos Translate</strong>, an open-source neural machine translation framework powered by OpenNMT-py. Argos Translate packages language pairs into standalone <code>.argosmodel</code> zip archives containing binary translation matrices.</p>
+            <p>Because language packs run locally, translation latency is virtually instantaneous (typically 50-100 milliseconds for standard conversational sentences). Furthermore, users can pre-download specific language pairs without relying on external network requests during operational use.</p>
+
+            <h2 id="tts">5. Text-to-Speech Output (Piper TTS)</h2>
+            <p>For scenario applications requiring spoken translation (such as voice-over output during Zoom calls), the translated text string is dispatched to <strong>Piper TTS</strong>. Piper is a fast, local neural text-to-speech system optimized for Raspberry Pi and desktop CPUs using VITS generative architecture and ONNX Runtime.</p>
+            <p>Piper produces natural, human-sounding speech synthesis audio in real time with a Real-Time Factor (RTF) of less than 0.15 on standard modern quad-core x86 CPUs.</p>
+
+            <h2 id="conclusion">6. Conclusion & Best Practices</h2>
+            <p>By chaining lightweight, highly optimized ONNX and CTranslate2 models, modern desktop hardware is fully capable of running end-to-end multilingual voice translation without cloud services. This architecture provides total privacy, zero recurring operational costs, and resilient offline functionality for users worldwide.</p>
+
+            <div class="author-box">
+                <div class="author-avatar">💻</div>
+                <div class="author-info">
+                    <h4>Written by Jay Parmar & Raj Prajapati</h4>
+                    <p>Core maintainers of Voxxwire — dedicated to building privacy-first, open-source offline AI desktop applications.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html#features">Features</a>
+                <a href="../guide.html">User Guide</a>
+                <a href="../articles.html">Articles</a>
+                <a href="../about.html">About Us</a>
+                <a href="../privacy.html">Privacy Policy</a>
+                <a href="../terms.html">Terms of Service</a>
+                <a href="../releases.html">Releases</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>
