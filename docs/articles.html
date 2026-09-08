@@ -56,102 +56,143 @@
         </div>
     </nav>
 
-    <!-- ═══════════ HEADER ═══════════ -->
-    <header class="page-header">
-        <div class="header-inner">
+    <!-- ═══════════ MAIN CONTENT ═══════════ -->
+    <main class="page-container" style="max-width: 1100px;">
+
+        <!-- Header -->
+        <header class="page-header" style="margin-bottom: 40px;">
             <span class="section-badge">Knowledge Base & AI Engineering</span>
             <h1>Articles & <span class="accent-text">Technical Guides</span></h1>
-            <p class="lead">Explore in-depth technical guides, Whisper benchmarks, audio pipeline tutorials, and privacy analysis for local offline speech processing.</p>
-        </div>
-    </header>
+            <p class="page-subtitle">Deep dives into offline speech translation pipelines, Whisper benchmarks, audio loopback tutorials, and privacy engineering.</p>
+        </header>
 
-    <!-- ═══════════ ARTICLES GRID ═══════════ -->
-    <main class="page-main">
-        <div class="section-inner" style="max-width: 1100px;">
-            <div class="articles-grid">
-
-                <!-- Article 1 -->
-                <article class="article-card">
-                    <div>
-                        <span class="article-tag">ARCHITECTURE</span>
-                        <h3><a href="articles/how-offline-speech-translation-works.html">How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate</a></h3>
-                        <p class="article-excerpt">A technical deep dive into building an end-to-end local speech recognition and translation pipeline without cloud dependencies or API keys.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span>Sept 5, 2026</span>
-                        <span>8 min read</span>
-                    </div>
-                </article>
-
-                <!-- Article 2 -->
-                <article class="article-card">
-                    <div>
-                        <span class="article-tag">PRIVACY & SECURITY</span>
-                        <h3><a href="articles/local-vs-cloud-speech-translation.html">Local vs Cloud Speech Translation: Why Privacy Matters in Confidential Meetings</a></h3>
-                        <p class="article-excerpt">Analyzing data sovereignty, zero-cloud architecture, latency, and compliance benefits of running speech models directly on client hardware.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span>Aug 28, 2026</span>
-                        <span>6 min read</span>
-                    </div>
-                </article>
-
-                <!-- Article 3 -->
-                <article class="article-card">
-                    <div>
-                        <span class="article-tag">TUTORIAL</span>
-                        <h3><a href="articles/setup-realtime-translation-zoom-teams.html">How to Setup Real-Time Subtitles & Audio Translation for Zoom & Microsoft Teams</a></h3>
-                        <p class="article-excerpt">Step-by-step guide to configuring Windows WASAPI audio loopback and dual-channel microphone capture for seamless online meeting translations.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span>Aug 14, 2026</span>
-                        <span>10 min read</span>
-                    </div>
-                </article>
-
-                <!-- Article 4 -->
-                <article class="article-card">
-                    <div>
-                        <span class="article-tag">BENCHMARKS</span>
-                        <h3><a href="articles/whisper-model-performance-benchmarks.html">OpenAI Whisper Model Benchmarks: CPU vs GPU Latency & Memory Footprint</a></h3>
-                        <p class="article-excerpt">Comprehensive latency and RAM comparison between Whisper Tiny, Base, Small, and Medium models across Intel Core, AMD Ryzen, and NVIDIA CUDA GPUs.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span>Jul 30, 2026</span>
-                        <span>7 min read</span>
-                    </div>
-                </article>
-
-                <!-- Article 5 -->
-                <article class="article-card">
-                    <div>
-                        <span class="article-tag">ROUNDUP</span>
-                        <h3><a href="articles/best-free-offline-translation-tools-windows.html">Top 5 Free & Open-Source Offline Translation Tools for Windows (2026 Edition)</a></h3>
-                        <p class="article-excerpt">A comparative review of open-source desktop software for offline text and voice translation, evaluating privacy, accuracy, and ease of setup.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span>Jul 18, 2026</span>
-                        <span>9 min read</span>
-                    </div>
-                </article>
-
+        <!-- ═══════════ FEATURED HERO ARTICLE ═══════════ -->
+        <section class="featured-article-card">
+            <div class="featured-article-content">
+                <span class="featured-badge">⚡ Featured Deep Dive</span>
+                <h2><a href="articles/how-offline-speech-translation-works.html">How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate</a></h2>
+                <p class="featured-excerpt">An end-to-end technical breakdown of orchestrating local CTranslate2 models, voice activity segmentation, and sub-second neural translation without cloud dependencies.</p>
+                <div class="featured-meta">
+                    <span>✍️ Jay Parmar & Raj Prajapati</span>
+                    <span>•</span>
+                    <span>📅 Sept 5, 2026</span>
+                    <span>•</span>
+                    <span>⏱️ 8 min read</span>
+                    <span>•</span>
+                    <a href="articles/how-offline-speech-translation-works.html" class="read-link">Read Deep Dive →</a>
+                </div>
             </div>
-
-            <!-- Ad Unit -->
-            <div style="margin-top: 50px; text-align: center;">
-                <span class="ad-label">Advertisement</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-3331266051749440"
-                     data-ad-slot="auto"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+            <div class="featured-visual-box">
+                <span class="featured-visual-icon">⚙️</span>
+                <span class="featured-visual-label">AI Architecture</span>
             </div>
+        </section>
+
+        <!-- ═══════════ TOOLBAR: SEARCH & FILTERS ═══════════ -->
+        <div class="articles-toolbar">
+            <div class="article-filters" id="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Articles</button>
+                <button class="filter-btn" data-filter="architecture">Architecture</button>
+                <button class="filter-btn" data-filter="privacy">Privacy</button>
+                <button class="filter-btn" data-filter="tutorial">Tutorials</button>
+                <button class="filter-btn" data-filter="benchmarks">Benchmarks</button>
+                <button class="filter-btn" data-filter="roundup">Roundups</button>
+            </div>
+            <div class="article-search-wrap">
+                <span class="search-icon-inside">🔍</span>
+                <input type="text" id="search-input" class="article-search-input" placeholder="Search articles...">
+            </div>
+        </div>
+
+        <!-- ═══════════ ARTICLES GRID ═══════════ -->
+        <div class="articles-grid" id="articles-grid">
+
+            <!-- Article 1 -->
+            <article class="article-card" data-category="architecture">
+                <div class="article-card-header">
+                    <span class="article-tag tag-architecture">ARCHITECTURE</span>
+                    <h3><a href="articles/how-offline-speech-translation-works.html">How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate</a></h3>
+                    <p class="article-excerpt">A technical deep dive into building an end-to-end local speech recognition and translation pipeline without cloud dependencies or API keys.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Sept 5, 2026</span>
+                    <span>⏱️ 8 min read</span>
+                    <a href="articles/how-offline-speech-translation-works.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 2 -->
+            <article class="article-card" data-category="privacy">
+                <div class="article-card-header">
+                    <span class="article-tag tag-privacy">PRIVACY & SECURITY</span>
+                    <h3><a href="articles/local-vs-cloud-speech-translation.html">Local vs Cloud Speech Translation: Why Privacy Matters in Confidential Meetings</a></h3>
+                    <p class="article-excerpt">Analyzing data sovereignty, zero-cloud architecture, latency, and compliance benefits of running speech models directly on client hardware.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Aug 28, 2026</span>
+                    <span>⏱️ 6 min read</span>
+                    <a href="articles/local-vs-cloud-speech-translation.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 3 -->
+            <article class="article-card" data-category="tutorial">
+                <div class="article-card-header">
+                    <span class="article-tag tag-tutorial">TUTORIAL</span>
+                    <h3><a href="articles/setup-realtime-translation-zoom-teams.html">How to Setup Real-Time Subtitles & Audio Translation for Zoom & Microsoft Teams</a></h3>
+                    <p class="article-excerpt">Step-by-step guide to configuring Windows WASAPI audio loopback and dual-channel microphone capture for seamless online meeting translations.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Aug 14, 2026</span>
+                    <span>⏱️ 10 min read</span>
+                    <a href="articles/setup-realtime-translation-zoom-teams.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 4 -->
+            <article class="article-card" data-category="benchmarks">
+                <div class="article-card-header">
+                    <span class="article-tag tag-benchmarks">BENCHMARKS</span>
+                    <h3><a href="articles/whisper-model-performance-benchmarks.html">OpenAI Whisper Model Benchmarks: CPU vs GPU Latency & Memory Footprint</a></h3>
+                    <p class="article-excerpt">Comprehensive latency and RAM comparison between Whisper Tiny, Base, Small, and Medium models across Intel Core, AMD Ryzen, and NVIDIA CUDA GPUs.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Jul 30, 2026</span>
+                    <span>⏱️ 7 min read</span>
+                    <a href="articles/whisper-model-performance-benchmarks.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 5 -->
+            <article class="article-card" data-category="roundup">
+                <div class="article-card-header">
+                    <span class="article-tag tag-roundup">ROUNDUP</span>
+                    <h3><a href="articles/best-free-offline-translation-tools-windows.html">Top 5 Free & Open-Source Offline Translation Tools for Windows (2026 Edition)</a></h3>
+                    <p class="article-excerpt">A comparative review of open-source desktop software for offline text and voice translation, evaluating privacy, accuracy, and ease of setup.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Jul 18, 2026</span>
+                    <span>⏱️ 9 min read</span>
+                    <a href="articles/best-free-offline-translation-tools-windows.html" class="read-link">Read →</a>
+                </div>
+            </article>
 
         </div>
+
+        <!-- Ad Unit -->
+        <div style="margin-top: 50px; text-align: center;">
+            <span class="ad-label">Advertisement</span>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3331266051749440"
+                 data-ad-slot="auto"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
     </main>
 
     <!-- ═══════════ FOOTER ═══════════ -->
@@ -184,6 +225,7 @@
         </div>
     </footer>
 
+    <!-- Interactive Client Filtering & Search Script -->
     <script>
         const menuBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -191,6 +233,40 @@
             navLinks.classList.toggle('open');
             menuBtn.classList.toggle('active');
         });
+
+        // Filtering and Search logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('search-input');
+        const articleCards = document.querySelectorAll('.article-card');
+
+        function filterArticles() {
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            const query = searchInput.value.toLowerCase().trim();
+
+            articleCards.forEach(card => {
+                const category = card.dataset.category;
+                const text = card.textContent.toLowerCase();
+
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+                const matchesSearch = query === '' || text.includes(query);
+
+                if (matchesFilter && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterArticles();
+            });
+        });
+
+        searchInput.addEventListener('input', filterArticles);
     </script>
 </body>
 
