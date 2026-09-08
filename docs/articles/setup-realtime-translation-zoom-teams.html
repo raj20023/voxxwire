@@ -66,6 +66,7 @@
     </nav>
 
     <div class="article-container">
+        <a href="../articles.html" class="back-to-articles">← Back to Articles</a>
         <header class="article-header">
             <span class="article-tag">TUTORIAL</span>
             <h1>How to Setup Real-Time Subtitles & Audio Translation for Zoom & Microsoft Teams</h1>
@@ -194,9 +195,14 @@ System Loopback   --> Input Channel 2 (Remote Speech) --> Whisper ASR --> Transl
     <script>
         const menuBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
-        menuBtn.addEventListener('click', () => {
+        menuBtn?.addEventListener('click', () => {
             navLinks.classList.toggle('open');
             menuBtn.classList.toggle('active');
+        });
+
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            nav?.classList.toggle('scrolled', window.scrollY > 40);
         });
     </script>
 </body>

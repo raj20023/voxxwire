@@ -66,6 +66,7 @@
     </nav>
 
     <div class="article-container">
+        <a href="../articles.html" class="back-to-articles">← Back to Articles</a>
         <header class="article-header">
             <span class="article-tag">BENCHMARKS</span>
             <h1>OpenAI Whisper Model Benchmarks: CPU vs GPU Latency & Memory Footprint</h1>
@@ -218,9 +219,14 @@
     <script>
         const menuBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
-        menuBtn.addEventListener('click', () => {
+        menuBtn?.addEventListener('click', () => {
             navLinks.classList.toggle('open');
             menuBtn.classList.toggle('active');
+        });
+
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            nav?.classList.toggle('scrolled', window.scrollY > 40);
         });
     </script>
 </body>

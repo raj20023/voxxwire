@@ -66,6 +66,7 @@
     </nav>
 
     <div class="article-container">
+        <a href="../articles.html" class="back-to-articles">← Back to Articles</a>
         <header class="article-header">
             <span class="article-tag">ROUNDUP</span>
             <h1>Top 5 Free & Open-Source Offline Translation Tools for Windows (2026 Edition)</h1>
@@ -214,9 +215,14 @@
     <script>
         const menuBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
-        menuBtn.addEventListener('click', () => {
+        menuBtn?.addEventListener('click', () => {
             navLinks.classList.toggle('open');
             menuBtn.classList.toggle('active');
+        });
+
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            nav?.classList.toggle('scrolled', window.scrollY > 40);
         });
     </script>
 </body>
