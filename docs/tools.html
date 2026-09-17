@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Free interactive hardware latency estimator and microphone test tool for offline speech translation and Whisper AI models.">
+    <meta name="keywords" content="Whisper latency calculator, AI hardware estimator, offline speech tool, mic test, Voxxwire tools">
+    <meta name="author" content="Jay Parmar, Raj Prajapati">
+    <link rel="canonical" href="https://voxxwire.com/tools.html">
+    <title>Interactive Tools & Hardware Estimator — Voxxwire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.2.0">
+    <meta name="google-adsense-account" content="ca-pub-3331266051749440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3331266051749440"
+        crossorigin="anonymous"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Voxxwire AI Hardware & Latency Estimator",
+      "url": "https://voxxwire.com/tools.html",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Interactive web tool to calculate offline speech recognition latency, RAM footprint, and hardware suitability for Whisper AI models."
+    }
+    </script>
+</head>
+
+<body>
+
+    <!-- ═══════════ NAVIGATION ═══════════ -->
+    <nav id="main-nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </span>
+                Voxxwire
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="tools.html" class="active">Tools</a>
+                <a href="articles.html">Articles</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="releases.html">Releases</a>
+                <a href="index.html#download" class="nav-cta">Download</a>
+            </div>
+            <button id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ MAIN CONTENT ═══════════ -->
+    <main class="page-container" style="max-width: 1060px;">
+
+        <header class="page-header" style="margin-bottom: 40px;">
+            <span class="section-badge">Interactive Web Utility</span>
+            <h1>Hardware & Latency <span class="accent-text">Estimator</span></h1>
+            <p class="page-subtitle">Test your system specs against Whisper AI models and simulate offline translation performance before downloading.</p>
+        </header>
+
+        <!-- ═══════════ TOOL 1: HARDWARE & LATENCY CALCULATOR ═══════════ -->
+        <div class="about-card" style="padding: 40px; margin-bottom: 48px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 24px;">
+                <div>
+                    <span class="article-tag" style="background: var(--mustard);">BENCHMARK SIMULATOR</span>
+                    <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-top: 8px; color: var(--ink);">AI Inference Latency Calculator</h2>
+                </div>
+                <!-- Quick Preset Buttons -->
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn btn-outline" id="preset-laptop" style="font-size: 0.8rem; padding: 6px 14px;">Budget Laptop</button>
+                    <button class="btn btn-outline" id="preset-office" style="font-size: 0.8rem; padding: 6px 14px;">Office Desktop</button>
+                    <button class="btn btn-outline" id="preset-gaming" style="font-size: 0.8rem; padding: 6px 14px;">Gaming / AI PC</button>
+                </div>
+            </div>
+
+            <!-- Configuration Inputs Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px;">
+                <div>
+                    <label style="display: block; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase;">1. Processor (CPU)</label>
+                    <select id="calc-cpu" style="width: 100%; padding: 12px; border: 2px solid var(--ink); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.92rem; background: var(--bg); box-shadow: 2px 2px 0px var(--ink);">
+                        <option value="high" selected>Intel Core i7/i9 or AMD Ryzen 7/9 (Modern)</option>
+                        <option value="mid">Intel Core i5 or AMD Ryzen 5</option>
+                        <option value="low">Intel Core i3 or AMD Ryzen 3</option>
+                        <option value="older">Older Quad-Core / Celeron / Pentium</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase;">2. Graphics Card (GPU)</label>
+                    <select id="calc-gpu" style="width: 100%; padding: 12px; border: 2px solid var(--ink); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.92rem; background: var(--bg); box-shadow: 2px 2px 0px var(--ink);">
+                        <option value="rtx">NVIDIA RTX 30/40 Series (CUDA)</option>
+                        <option value="gtx">NVIDIA GTX 10/16/20 Series (CUDA)</option>
+                        <option value="none" selected>None (CPU Only / Integrated Graphics)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase;">3. Whisper Model Size</label>
+                    <select id="calc-model" style="width: 100%; padding: 12px; border: 2px solid var(--ink); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.92rem; background: var(--bg); box-shadow: 2px 2px 0px var(--ink);">
+                        <option value="tiny">Whisper Tiny (~39M params)</option>
+                        <option value="base" selected>Whisper Base (~74M params - Recommended)</option>
+                        <option value="small">Whisper Small (~244M params - Higher Accuracy)</option>
+                        <option value="medium">Whisper Medium (~769M params - Maximum Accuracy)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase;">4. System RAM</label>
+                    <select id="calc-ram" style="width: 100%; padding: 12px; border: 2px solid var(--ink); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.92rem; background: var(--bg); box-shadow: 2px 2px 0px var(--ink);">
+                        <option value="4">4 GB (Minimum)</option>
+                        <option value="8">8 GB (Standard)</option>
+                        <option value="16" selected>16 GB (Recommended)</option>
+                        <option value="32">32 GB+ (Power User)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dynamic Calculation Output Panel -->
+            <div style="background: linear-gradient(135deg, #FAF0D8 0%, #F5E5BE 100%); border: 2.5px solid var(--ink); border-radius: var(--radius-sm); padding: 32px; box-shadow: 4px 4px 0px var(--ink);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; text-align: center;">
+                    
+                    <div>
+                        <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Est. End-to-End Latency</span>
+                        <div id="res-latency" style="font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--rust); margin-top: 4px;">~ 320 ms</div>
+                        <span style="font-size: 0.82rem; color: var(--ink);">VAD + Whisper + Translation</span>
+                    </div>
+
+                    <div>
+                        <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">RAM Footprint</span>
+                        <div id="res-ram" style="font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--ink); margin-top: 4px;">~ 290 MB</div>
+                        <span style="font-size: 0.82rem; color: var(--ink);">INT8 Quantized Model</span>
+                    </div>
+
+                    <div>
+                        <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Word Error Rate</span>
+                        <div id="res-wer" style="font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--ink); margin-top: 4px;">~ 7.8%</div>
+                        <span style="font-size: 0.82rem; color: var(--ink);">Accuracy Grade</span>
+                    </div>
+
+                    <div>
+                        <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Zoom / Teams Rating</span>
+                        <div id="res-badge" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--forest); margin-top: 10px;">⚡ Real-Time Ready</div>
+                        <span id="res-subtext" style="font-size: 0.82rem; color: var(--ink);">Smooth conversational subtitles</span>
+                    </div>
+
+                </div>
+
+                <!-- Recommendation summary banner -->
+                <div id="res-advice" style="margin-top: 24px; padding-top: 20px; border-top: 1.5px dashed var(--ink); font-size: 0.95rem; color: var(--ink);">
+                    💡 <strong>Analysis:</strong> This configuration delivers fluid sub-second translations on CPU. Whisper Base is optimal for live meetings without requiring a dedicated graphics card.
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════ TOOL 2: LIVE BROWSER MICROPHONE TESTER ═══════════ -->
+        <div class="about-card" style="padding: 40px; margin-bottom: 48px;">
+            <span class="article-tag" style="background: #B2D8C6;">BROWSER AUDIO UTILITY</span>
+            <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin: 10px 0 14px 0; color: var(--ink);">Live Microphone Input Tester</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px;">Verify that your microphone captures crisp audio with low ambient noise before installing Voxxwire. All processing runs 100% locally in your browser.</p>
+
+            <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px; flex-wrap: wrap;">
+                <button id="btn-mic-test" class="btn btn-primary" style="padding: 12px 24px; font-size: 0.95rem;">
+                    🎤 Test Microphone Now
+                </button>
+                <span id="mic-status" style="font-family: var(--font-mono); font-size: 0.88rem; color: var(--text-muted);">Click button to request mic access</span>
+            </div>
+
+            <!-- Audio Level Visualizer Bar -->
+            <div style="background: var(--bg); border: 2.5px solid var(--ink); border-radius: var(--radius-sm); padding: 18px; box-shadow: 3px 3px 0px var(--ink);">
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.78rem; margin-bottom: 6px; font-weight: 700;">
+                    <span>INPUT VOLUME LEVEL</span>
+                    <span id="mic-db-text">0 dB</span>
+                </div>
+                <div style="width: 100%; height: 24px; background: rgba(0,0,0,0.08); border-radius: 4px; border: 1.5px solid var(--ink); overflow: hidden; position: relative;">
+                    <div id="mic-level-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #4E7C60 0%, #E6CB7E 70%, #D9622B 100%); transition: width 0.05s ease;"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">
+                    <span class="logo-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    Voxxwire
+                </span>
+                <p>Real-Time Offline Speech Translator</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#features">Features</a>
+                <a href="guide.html">User Guide</a>
+                <a href="tools.html">Tools</a>
+                <a href="articles.html">Articles</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="releases.html">Releases</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Created by <strong>Jay Parmar</strong> and <strong>Raj Prajapati</strong></p>
+                <p class="footer-copy">&copy; 2026 Voxxwire. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Latency & Microphone Script -->
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        menuBtn?.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            menuBtn.classList.toggle('active');
+        });
+
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            nav?.classList.toggle('scrolled', window.scrollY > 40);
+        });
+
+        // ═══════════ Latency Calculator Logic ═══════════
+        const cpuEl = document.getElementById('calc-cpu');
+        const gpuEl = document.getElementById('calc-gpu');
+        const modelEl = document.getElementById('calc-model');
+        const ramEl = document.getElementById('calc-ram');
+
+        const latencyEl = document.getElementById('res-latency');
+        const ramOutEl = document.getElementById('res-ram');
+        const werEl = document.getElementById('res-wer');
+        const badgeEl = document.getElementById('res-badge');
+        const subtextEl = document.getElementById('res-subtext');
+        const adviceEl = document.getElementById('res-advice');
+
+        function calculateEstimates() {
+            const cpu = cpuEl.value;
+            const gpu = gpuEl.value;
+            const model = modelEl.value;
+            const ram = parseInt(ramEl.value);
+
+            // Base latencies (ms) per model
+            let baseLatency = 210;
+            let ramFootprint = "290 MB";
+            let wer = "7.8%";
+
+            if (model === 'tiny') {
+                baseLatency = 120;
+                ramFootprint = "150 MB";
+                wer = "10.4%";
+            } else if (model === 'base') {
+                baseLatency = 210;
+                ramFootprint = "290 MB";
+                wer = "7.8%";
+            } else if (model === 'small') {
+                baseLatency = 480;
+                ramFootprint = "780 MB";
+                wer = "5.2%";
+            } else if (model === 'medium') {
+                baseLatency = 1420;
+                ramFootprint = "2.1 GB";
+                wer = "4.1%";
+            }
+
+            // CPU Multipliers
+            let cpuMult = 1.0;
+            if (cpu === 'high') cpuMult = 0.85;
+            else if (cpu === 'mid') cpuMult = 1.0;
+            else if (cpu === 'low') cpuMult = 1.4;
+            else if (cpu === 'older') cpuMult = 2.2;
+
+            // GPU Acceleration
+            if (gpu === 'rtx') {
+                baseLatency = Math.round(baseLatency * 0.25);
+            } else if (gpu === 'gtx') {
+                baseLatency = Math.round(baseLatency * 0.45);
+            } else {
+                baseLatency = Math.round(baseLatency * cpuMult);
+            }
+
+            // Add VAD & Argos translation overhead (~90ms)
+            const totalLatency = baseLatency + 90;
+
+            latencyEl.textContent = `~ ${totalLatency} ms`;
+            ramOutEl.textContent = ramFootprint;
+            werEl.textContent = wer;
+
+            if (totalLatency <= 500) {
+                badgeEl.textContent = "⚡ Real-Time Ready";
+                badgeEl.style.color = "var(--forest)";
+                subtextEl.textContent = "Sub-second, ideal for live Zoom/Teams subtitles";
+                adviceEl.innerHTML = `💡 <strong>Analysis:</strong> Your system configuration will deliver extremely fluid sub-second speech translation with minimal resource footprint.`;
+            } else if (totalLatency <= 950) {
+                badgeEl.textContent = "✓ Good Performance";
+                badgeEl.style.color = "var(--rust)";
+                subtextEl.textContent = "Slight 1s pacing, readable subtitles";
+                adviceEl.innerHTML = `💡 <strong>Analysis:</strong> Acceptable conversational latency. If you desire even faster response, consider using the <strong>Whisper Base</strong> or <strong>Tiny</strong> model.`;
+            } else {
+                badgeEl.textContent = "⚠️ High Latency";
+                badgeEl.style.color = "#C0392B";
+                subtextEl.textContent = "Noticeable audio processing delay";
+                adviceEl.innerHTML = `⚠️ <strong>Analysis:</strong> For faster responsiveness on CPU, switch your model from Medium to <strong>Base</strong> or <strong>Small</strong>.`;
+            }
+        }
+
+        [cpuEl, gpuEl, modelEl, ramEl].forEach(el => el.addEventListener('change', calculateEstimates));
+
+        // Presets
+        document.getElementById('preset-laptop').addEventListener('click', () => {
+            cpuEl.value = 'low';
+            gpuEl.value = 'none';
+            modelEl.value = 'base';
+            ramEl.value = '8';
+            calculateEstimates();
+        });
+
+        document.getElementById('preset-office').addEventListener('click', () => {
+            cpuEl.value = 'mid';
+            gpuEl.value = 'none';
+            modelEl.value = 'base';
+            ramEl.value = '16';
+            calculateEstimates();
+        });
+
+        document.getElementById('preset-gaming').addEventListener('click', () => {
+            cpuEl.value = 'high';
+            gpuEl.value = 'rtx';
+            modelEl.value = 'small';
+            ramEl.value = '32';
+            calculateEstimates();
+        });
+
+        calculateEstimates();
+
+        // ═══════════ Live Microphone Tester Logic ═══════════
+        const micBtn = document.getElementById('btn-mic-test');
+        const micStatus = document.getElementById('mic-status');
+        const micBar = document.getElementById('mic-level-bar');
+        const micDb = document.getElementById('mic-db-text');
+
+        let audioCtx, analyser, micStream, animationId;
+
+        micBtn.addEventListener('click', async () => {
+            if (audioCtx) {
+                // Stop test
+                cancelAnimationFrame(animationId);
+                micStream.getTracks().forEach(track => track.stop());
+                audioCtx.close();
+                audioCtx = null;
+                micBtn.textContent = '🎤 Test Microphone Now';
+                micStatus.textContent = 'Microphone test stopped';
+                micBar.style.width = '0%';
+                micDb.textContent = '0 dB';
+                return;
+            }
+
+            try {
+                micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 256;
+
+                const source = audioCtx.createMediaStreamSource(micStream);
+                source.connect(analyser);
+
+                micBtn.textContent = '⏹️ Stop Mic Test';
+                micStatus.textContent = '🟢 Microphone active! Speak to see live input levels.';
+                micStatus.style.color = 'var(--forest)';
+
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                function updateMeter() {
+                    analyser.getByteFrequencyData(dataArray);
+                    let sum = 0;
+                    for (let i = 0; i < dataArray.length; i++) {
+                        sum += dataArray[i];
+                    }
+                    const avg = sum / dataArray.length;
+                    const percent = Math.min(100, Math.round((avg / 128) * 100));
+                    micBar.style.width = percent + '%';
+                    micDb.textContent = Math.round(avg * 0.7) + ' dB';
+                    animationId = requestAnimationFrame(updateMeter);
+                }
+                updateMeter();
+
+            } catch (err) {
+                micStatus.textContent = '⚠️ Microphone access denied or no microphone found.';
+                micStatus.style.color = '#C0392B';
+            }
+        });
+    </script>
+</body>
+
+</html>
