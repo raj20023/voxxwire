@@ -72,29 +72,29 @@
         <!-- ═══════════ FEATURED HERO ARTICLE ═══════════ -->
         <section class="featured-article-card">
             <div class="featured-article-content">
-                <span class="featured-badge">⚡ Featured Deep Dive</span>
-                <h2><a href="articles/how-offline-speech-translation-works.html">How Offline Speech Translation Works: Whisper, Silero VAD & Argos Translate</a></h2>
-                <p class="featured-excerpt">An end-to-end technical breakdown of orchestrating local CTranslate2 models, voice activity segmentation, and sub-second neural translation without cloud dependencies.</p>
+                <span class="featured-badge">⚡ Featured Engineering Guide</span>
+                <h2><a href="articles/fixing-wasapi-audio-loopback-windows-guide.html">Fixing Windows WASAPI Audio Loopback & Virtual Cable Routing: A Complete Guide</a></h2>
+                <p class="featured-excerpt">Diagnose and resolve common audio loopback failures (AUDCLNT_E_DEVICE_INVALIDATED), 44.1kHz vs 48kHz sample rate mismatches, and virtual audio cable routing for meeting speech translation.</p>
                 <div class="featured-meta">
                     <span>✍️ Jay Parmar & Raj Prajapati</span>
                     <span>•</span>
-                    <span>📅 Sept 5, 2026</span>
+                    <span>📅 Oct 18, 2026</span>
                     <span>•</span>
-                    <span>⏱️ 8 min read</span>
+                    <span>⏱️ 11 min read</span>
                     <span>•</span>
-                    <a href="articles/how-offline-speech-translation-works.html" class="read-link">Read Deep Dive →</a>
+                    <a href="articles/fixing-wasapi-audio-loopback-windows-guide.html" class="read-link">Read Deep Dive →</a>
                 </div>
             </div>
             <div class="featured-visual-box">
-                <span class="featured-visual-icon">⚙️</span>
-                <span class="featured-visual-label">AI Architecture</span>
+                <span class="featured-visual-icon">🎧</span>
+                <span class="featured-visual-label">Audio Systems</span>
             </div>
         </section>
 
         <!-- ═══════════ TOOLBAR: SEARCH & FILTERS ═══════════ -->
         <div class="articles-toolbar">
             <div class="article-filters" id="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Articles</button>
+                <button class="filter-btn active" data-filter="all">All Articles (10)</button>
                 <button class="filter-btn" data-filter="architecture">Architecture</button>
                 <button class="filter-btn" data-filter="privacy">Privacy</button>
                 <button class="filter-btn" data-filter="tutorial">Tutorials</button>
@@ -103,14 +103,84 @@
             </div>
             <div class="article-search-wrap">
                 <span class="search-icon-inside">🔍</span>
-                <input type="text" id="search-input" class="article-search-input" placeholder="Search articles...">
+                <input type="text" id="search-input" class="article-search-input" placeholder="Search 10 technical guides...">
             </div>
         </div>
 
         <!-- ═══════════ ARTICLES GRID ═══════════ -->
         <div class="articles-grid" id="articles-grid">
 
-            <!-- Article 1 -->
+            <!-- Article 1 (New) -->
+            <article class="article-card" data-category="tutorial">
+                <div class="article-card-header">
+                    <span class="article-tag tag-tutorial">TUTORIAL & TROUBLESHOOTING</span>
+                    <h3><a href="articles/fixing-wasapi-audio-loopback-windows-guide.html">Fixing Windows WASAPI Audio Loopback & Virtual Cable Routing</a></h3>
+                    <p class="article-excerpt">A complete engineering walkthrough to diagnosing Windows audio loopback errors, buffer stalls, and virtual routing for Zoom and Teams.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Oct 18, 2026</span>
+                    <span>⏱️ 11 min read</span>
+                    <a href="articles/fixing-wasapi-audio-loopback-windows-guide.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 2 (New) -->
+            <article class="article-card" data-category="benchmarks">
+                <div class="article-card-header">
+                    <span class="article-tag tag-benchmarks">BENCHMARKS & ARCHITECTURE</span>
+                    <h3><a href="articles/piper-tts-vs-coqui-espeak-offline-voice.html">Piper Neural TTS vs Coqui & eSpeak: Offline Voice Synthesis Benchmarks</a></h3>
+                    <p class="article-excerpt">Benchmarking CPU latency, memory consumption, and Mean Opinion Score (MOS) across popular offline text-to-speech engines.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Oct 12, 2026</span>
+                    <span>⏱️ 9 min read</span>
+                    <a href="articles/piper-tts-vs-coqui-espeak-offline-voice.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 3 (New) -->
+            <article class="article-card" data-category="architecture">
+                <div class="article-card-header">
+                    <span class="article-tag tag-architecture">OPTIMIZATION</span>
+                    <h3><a href="articles/optimizing-faster-whisper-ctranslate2-low-spec-pc.html">Optimizing faster-whisper & CTranslate2 for Low-Spec Laptops</a></h3>
+                    <p class="article-excerpt">Running speech recognition on 4GB-8GB RAM laptops using INT8 post-training quantization, thread affinity, and greedy beam decoding.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Oct 6, 2026</span>
+                    <span>⏱️ 10 min read</span>
+                    <a href="articles/optimizing-faster-whisper-ctranslate2-low-spec-pc.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 4 (New) -->
+            <article class="article-card" data-category="tutorial">
+                <div class="article-card-header">
+                    <span class="article-tag tag-tutorial">STREAMING & GAMING</span>
+                    <h3><a href="articles/audio-translation-discord-obs-streamers.html">How to Route Real-Time Audio Translation into Discord & OBS Studio</a></h3>
+                    <p class="article-excerpt">Step-by-step setup for gamers and content creators to broadcast translated voice into Discord and overlay live subtitles into OBS.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Sept 29, 2026</span>
+                    <span>⏱️ 8 min read</span>
+                    <a href="articles/audio-translation-discord-obs-streamers.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 5 (New) -->
+            <article class="article-card" data-category="architecture">
+                <div class="article-card-header">
+                    <span class="article-tag tag-architecture">COMPARISON</span>
+                    <h3><a href="articles/whisper-vs-vosk-vs-deepspeech-offline-asr-comparison.html">Whisper vs Vosk vs DeepSpeech: Offline Speech Recognition in 2026</a></h3>
+                    <p class="article-excerpt">Head-to-head comparison evaluating word error rate (WER) in noisy environments, multilingual coverage, and streaming latency.</p>
+                </div>
+                <div class="article-meta">
+                    <span>📅 Sept 22, 2026</span>
+                    <span>⏱️ 12 min read</span>
+                    <a href="articles/whisper-vs-vosk-vs-deepspeech-offline-asr-comparison.html" class="read-link">Read →</a>
+                </div>
+            </article>
+
+            <!-- Article 6 -->
             <article class="article-card" data-category="architecture">
                 <div class="article-card-header">
                     <span class="article-tag tag-architecture">ARCHITECTURE</span>
@@ -124,7 +194,7 @@
                 </div>
             </article>
 
-            <!-- Article 2 -->
+            <!-- Article 7 -->
             <article class="article-card" data-category="privacy">
                 <div class="article-card-header">
                     <span class="article-tag tag-privacy">PRIVACY & SECURITY</span>
@@ -138,7 +208,7 @@
                 </div>
             </article>
 
-            <!-- Article 3 -->
+            <!-- Article 8 -->
             <article class="article-card" data-category="tutorial">
                 <div class="article-card-header">
                     <span class="article-tag tag-tutorial">TUTORIAL</span>
@@ -152,7 +222,7 @@
                 </div>
             </article>
 
-            <!-- Article 4 -->
+            <!-- Article 9 -->
             <article class="article-card" data-category="benchmarks">
                 <div class="article-card-header">
                     <span class="article-tag tag-benchmarks">BENCHMARKS</span>
@@ -166,7 +236,7 @@
                 </div>
             </article>
 
-            <!-- Article 5 -->
+            <!-- Article 10 -->
             <article class="article-card" data-category="roundup">
                 <div class="article-card-header">
                     <span class="article-tag tag-roundup">ROUNDUP</span>
@@ -182,19 +252,7 @@
 
         </div>
 
-        <!-- Ad Unit -->
-        <div style="margin-top: 50px; text-align: center;">
-            <span class="ad-label">Advertisement</span>
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3331266051749440"
-                 data-ad-slot="auto"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+
 
     </main>
 

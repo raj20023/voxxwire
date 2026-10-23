@@ -155,19 +155,7 @@ def process_audio_chunk(audio_chunk, sample_rate=16000):
         # Trigger speech segmentation if silence exceeds 400ms
         flush_buffer_if_silent()</code></pre>
 
-            <!-- Ad Unit -->
-            <div style="margin: 35px 0; text-align: center;">
-                <span class="ad-label">Advertisement</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-3331266051749440"
-                     data-ad-slot="auto"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
+
 
             <h2 id="asr">3. Automatic Speech Recognition (faster-whisper)</h2>
             <p>Once Silero VAD detects an utterance boundary, the buffered PCM float32 array is passed to <strong>faster-whisper</strong>, an optimized reimplementation of OpenAI's Whisper model utilizing CTranslate2. CTranslate2 provides INT8 quantization and CUDA/AVX-512 vectorization, resulting in up to 4x execution speed improvement compared to vanilla PyTorch implementations.</p>
